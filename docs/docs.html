@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <style>
+  body {
+    font-family: "Avenir Next", Helvetica, Arial, sans-serif;
+    padding:1em;
+    margin:auto;
+    max-width:42em;
+    background:#fefefe;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+  }
+  
+  h1 {
+    color: #000000;
+    font-size: 28pt;
+  }
+  
+  h2 {
+    border-bottom: 1px solid #CCCCCC;
+    color: #000000;
+    font-size: 24px;
+  }
+  
+  h3 {
+    font-size: 18px;
+  }
+  
+  h4 {
+    font-size: 16px;
+  }
+  
+  h5 {
+    font-size: 14px;
+  }
+  
+  h6 {
+    color: #777777;
+    background-color: inherit;
+    font-size: 14px;
+  }
+  
+  hr {
+    height: 0.2em;
+    border: 0;
+    color: #CCCCCC;
+    background-color: #CCCCCC;
+  }
+  
+  p, blockquote, ul, ol, dl, li, table, pre {
+    margin: 15px 0;
+  }
+  
+  a, a:visited {
+    color: #4183C4;
+    background-color: inherit;
+    text-decoration: none;
+  }
+  
+  #message {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    display:block;
+    width:100%;
+    height:60px;
+    margin:6px 0px;
+  }
+  
+  button, #ws {
+    font-size: 10pt;
+    padding: 4px 6px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    background-color: #eee;
+  }
+  
+  code, pre, #ws, #message {
+    font-family: Monaco;
+    font-size: 10pt;
+    border-radius: 3px;
+    background-color: #F8F8F8;
+    color: inherit;
+  }
+  
+  code {
+    border: 1px solid #EAEAEA;
+    margin: 0 2px;
+    padding: 0 5px;
+  }
+  
+  pre {
+    border: 1px solid #CCCCCC;
+    overflow: auto;
+    padding: 4px 8px;
+  }
+  
+  pre > code {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #ws { background-color: #f8f8f8; }
+  
+  .send { color:#77bb77; }
+  .server { color:#7799bb; }
+  .error { color:#AA0000; }
+  </style>
+</head>
+<body>
+<h1 id="alignment-trees">Alignment Trees</h1>
+<p>Vishesh Gupta</p>
+<h2 id="motivation">Motivation</h2>
+<p>The primary problems in translation have always been selecting the appropriate words to translate to (an issue of dictionary), and then rearranging them in the most fluent way possible (the issue of alignment). Of the two, Alignment Trees deal with the second.</p>
+<p>Trivially, the ideal rearrangement is one of the possible permutations of the sentence. However, considering all of the permutations quickly becomes unwieldy, mostly because there are too many variations of sentences and too many permutations to handle.</p>
+<p>However, <a href="http://delivery.acm.org/10.1145/980000/972707/p377-wu.pdf">DeKai Wu</a> and other researchers have noted that &quot;related information stays together&quot; in previous research. For example, if there is &quot;red car&quot; in english, it might become &quot;autombile roja&quot; in spanish, but the word for red and the word for car would never be very far from each other.</p>
+<p>What this suggests (and follows from our own intuition of grammar) is that there is some tree-like structure to natural language, and that some of those subtrees have the same leaves, but in different orders.</p>
+<p>In that case, it should be possible to map one grammar tree to another grammar tree (or the corresponding subtrees) and learn when those trees are similar or different. This is generally called tree-based translation, and there are many algorithms for it on the <a href="http://www.statmt.org/moses/?n=Moses.SyntaxTutorial#ntoc1">moses tree-based translation page</a></p>
+<p>DeKai Wu et all concieved of a tree of operations that map the order of the source language to that of the target language. His intuition was that these mappings could be produced by simply reordering each pair of words, with two operations - N and R, where N preserves order and R reverses the order.</p>
+<p>As an example, consider an alignment problem with the sentences &quot;I went home&quot; and &quot;Mein ghar gaya&quot; (phoneticized Hindi, translated to I home went).</p>
+<p>Now, the appropriate tree here would be (N I (R went home)) to transform the original ordering of the words to the new ordering in hindi.</p>
+<p>There are still issues with this approach, such as spurious words, and phrase alignments among other problems, and I will discuss how we dealt with those.</p>
+<h2 id="how-to">How To</h2>
+<p>Alignment trees are made by taking a parallel alignment problem such as</p>
+<pre><code>english: The Government will help develop customer satisfaction indices ,  and encourage their inclusion in existing and future benchmarking schemes .
+hindi: सरकार सेवाओं से उपभोक्ताओं की संतुष्टी नाँपने के पैमाने विकसित करने और इनको  वर्तमान तथा भविष्य की बैंचमार्किंग स्कीम्ज में शामिल करने के लिए मदद देगी  ।
+alignment: 1-0 2-24 2-25 3-24 3-25 4-9 4-10 5-3 5-4 5-5 6-3 6-4 6-5 7-6 7-7 7-8 9-11 11-12 12-20 12-21 13-19 14-13 15-14 16-15 17-17 18-18 19-26</code></pre>
+<p>And produce a tree like</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">:N</span>
+ (<span class="kw">:N</span>
+  (<span class="kw">:N</span>
+   (<span class="kw">:N</span>
+    (<span class="kw">:R</span>
+     (<span class="kw">:R</span>
+      (<span class="kw">:R</span>
+       (<span class="kw">:N</span> <span class="dv">10</span> <span class="dv">11</span>)
+       (<span class="kw">:N</span> <span class="dv">8</span> <span class="dv">9</span>))
+      <span class="dv">7</span>)
+     (<span class="kw">:N</span>
+      (<span class="kw">:N</span>
+       (<span class="kw">:N</span>
+        (<span class="kw">:N</span>
+         (<span class="kw">:N</span>
+          (<span class="kw">:N</span> <span class="dv">0</span> <span class="dv">1</span>)
+          <span class="dv">2</span>)
+         <span class="dv">3</span>)
+        <span class="dv">4</span>)
+       <span class="dv">5</span>)
+      <span class="dv">6</span>))
+    <span class="dv">12</span>)
+   <span class="dv">13</span>)
+  (<span class="kw">:R</span>
+   (<span class="kw">:R</span>
+    (<span class="kw">:R</span>
+     (<span class="kw">:R</span>
+      (<span class="kw">:R</span> <span class="dv">23</span> <span class="dv">22</span>)
+      (<span class="kw">:N</span> <span class="dv">20</span> <span class="dv">21</span>))
+     (<span class="kw">:N</span> <span class="dv">18</span> <span class="dv">19</span>))
+    <span class="dv">17</span>)
+   (<span class="kw">:N</span>
+    (<span class="kw">:N</span> <span class="dv">14</span> <span class="dv">15</span>)
+    <span class="dv">16</span>)))
+ <span class="dv">24</span>)</code></pre></div>
+<p>Here's the flattened (simplified) version of this tree:</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">:N</span>
+ (<span class="kw">:N</span>
+  (<span class="kw">:R</span>
+   (<span class="kw">:R</span>
+    (<span class="kw">:N</span> <span class="dv">10</span> <span class="dv">11</span>)
+    (<span class="kw">:N</span> <span class="dv">8</span> <span class="dv">9</span>)
+    <span class="dv">7</span>)
+   (<span class="kw">:N</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span> <span class="dv">5</span> <span class="dv">6</span>))
+  <span class="dv">12</span>
+  <span class="dv">13</span>)
+ (<span class="kw">:R</span>
+  (<span class="kw">:R</span>
+   (<span class="kw">:R</span>
+    (<span class="kw">:R</span> <span class="dv">23</span> <span class="dv">22</span>)
+    (<span class="kw">:N</span> <span class="dv">20</span> <span class="dv">21</span>))
+   (<span class="kw">:N</span> <span class="dv">18</span> <span class="dv">19</span>)
+   <span class="dv">17</span>)
+  (<span class="kw">:N</span> <span class="dv">14</span> <span class="dv">15</span> <span class="dv">16</span>))
+ <span class="dv">24</span>)</code></pre></div>
+<p>This is clojure syntax (edn format) for the tree where :N is the normal operation and :R is the reverse operation.</p>
+<p>It may be easier to see this as a operation tree as an actual tree <a href="http://ling-itgp.herokuapp.com/hi/13">online</a>.</p>
+<p>As you can see, taking the leaf nodes in their original order (as given on the right of the picture) and then applying the operations as you go up the tree would take the out of order leaf nodes and put them back in order 0-whatever.</p>
+<p>So this tree represents a series of operations that can reorder a tree from one language to another.</p>
+<p>It's much easier to visually understand if you go to the <a href="http://ling-itgp.herokuapp.com">website</a>. Pressing right/left moves you around the different sentences, and you can choose between french, hindi and swedish.</p>
+<p>One thing to note is that the only required input to the tree-generation is the alignment string. In other words, this problem can take a string like '0-0 1-10 2-3 4-9 ...' and output a tree of operations. From here on out, we will only showcase those strings and trees, not deal with the original words of the sentences.</p>
+<p>Another visual presentation of this is given in these <a href="https://docs.google.com/presentation/d/1NHC_teV0lUH_AUVZpk2JUzwP1myVwXXXAFRsnDe-8R0">slides</a> Play through slides 5-8 to get a picture of how an alignment produces an alignment tree.</p>
+<h2 id="inconsistencies">Inconsistencies</h2>
+<p>As it was stated before, there are some issues with generating these trees. Here's a list of them, and how we got around the problems.</p>
+<h3 id="one-to-many-mapping">One-to-many mapping</h3>
+<p>Here we'd get a string like '1-1 1-2 1-3'. The way to think about this is that some word in one language maps to a phrase in another language. In the situations where there was a contiguous mapping (like in the example given) it was easy to just shrink down the phrase in the target language to one terminal (let's just replace 1,2,3 by 1) and then you'd have '1-1' in the alignment string. This is pretty much the intent of a contiguous one-to-many mapping anyway - the three words it produces are pretty much one entity.</p>
+<p>This gets more confusing with things like split infinitives, when you might see an alignment like '1-1 1-3 2-2'. Now it's impossible to &quot;shrink&quot; the mapping since the phrase is split around another word.</p>
+<p>The solution we came up with is to duplicate the original word (ie., the two 1's are separate entities), which would give you a tree like <code>(N 1 (R 3 2))</code></p>
+<p>For the purposes of identifying these numbers differently, we would uniquely number the 1's. So the new string would be '1-1 2-3 3-2', and the corresponding tree would be <code>(N 1 (R 3 2))</code> with no hassle.</p>
+<p>This seems strange, but it's actually a well known tactic in the generative stories of IBM model 3.</p>
+<h3 id="vanishing-words-one-to-no-mapping">Vanishing words (one-to-no mapping)</h3>
+<p>Basically the string looks like '1-1 3-2' and 2 doesn't go anywhere. The solution we came up with was to copy the previous word's alignment (i.e fold the non-producing word left).</p>
+<p>This isn't the greatest way to do this (and I have some ideas on how to improve the folding). In many languages (english included) it actually makes more sense to fold right (hindi is a good example - heads always come after their modifiers. This is also true of english (i.e, the red car -&gt; lal gadi, but you'd want to fold 'the' right so that it grammatically comes under the clause it's actually part of)). It really depends on which word is being left out of the mix.</p>
+<p>In our current solution, you'd get a new alignment string like '1-1 2-1 3-2'.</p>
+<p>An issue is that the parse tree gets an extra terminal for 2 that didn't exist in the original alignment.</p>
+<p>We actually don't create a new terminal for this reason, and just renumber the old terminals. So we get '1-1 2-3' -&gt; '1-1 2-2' (and we pretend that word #2 doesn't exist.)</p>
+<p>This is actually a bad idea, since it removes information about null alignments. It would be helpful to know that, for example '[a|an|the] noun -&gt; noun' in hindi in almost all cases (hindi doesn't have articles)</p>
+<h3 id="many-to-one-mappings">Many to one mappings</h3>
+<p>This is the opposite of one-to-many.</p>
+<p>In this case, we duplicate the terminal in the target languge, and get '1-1 2-1 3-2' -&gt; '1-1 2-2 3-3' and it parses to <code>(N 1 (N 2 3))</code>.</p>
+<h3 id="materializing-words">Materializing words</h3>
+<p>This is the target side version of the vanishing words. Again, we just fold the non-aligned words into the previous terminal.</p>
+<p>Again, this is problematic, because you may want to fold right in many languages.</p>
+<p>So '1-1 2-3' would become '1-1 1-2 2-3' which would become '1-1 2-2 3-3' per previous rules. We end up with <code>(N 1 (N 2 3))</code>.</p>
+<h3 id="higher-order-operations.">Higher order operations.</h3>
+<p>Try parsing '2 4 1 3' with only N and R operations. You can't.</p>
+<p>The solution to this is to allow higher order operations where needed. They tend to be rare ('2413' and '3142' are the only two length-4 ones, there are 6 length-5, and 46 length-6 ones). If you're curious, this corresponds to the sequence A111111 in the integer sequences dictionary, and it actually has a very beautiful mathematical interpretation as A(n) = # of simple permutations of length n. This makes a whole lot of sense, since one would have to consider the entire sequence's permutation to reverse it back to the original order.</p>
+<p>The next few numbers in the sequence are 338 and 2926. It's really hard to imagine that our minds are dealing with 2926 different permutations of things when we construct sentences, rather than dealing with 46. I've cut off the operations at order 6, and anything larger, I'm attributing to a faulty alignment, or there's something bizarre going on.</p>
+<h3 id="phrase-translations.">phrase translations.</h3>
+<p>Unfortunately, there are lot of shortcuts taken in the data, and one of them are wholesale phrase translations. There are a lot that aren't what I'd call &quot;minimal&quot;, and they tend to contain more words than they need to. <a href="http://ling-itgp.herokuapp.com/fr/19">Here's</a> a good example, if you look at the end of the sentence. It's non minimal because there are a lot of direct translations you could map out of that set, and because 'in' is mapped to two separate phrases next to each other. This is a super bizarre example, and I wasn't able to parse this alignment. I'd say whoever made it was a little confused, but I don't speak french so it's hard for me to verify.</p>
+<p>This normally looks like '1-1 1-2 1-3 2-1 2-2 2-3'. Basically a series of two words in the source maps to a series of three words in the translation.</p>
+<p>The way that I'm dealing with this is to collapse the phrases on both sides to a single terminal. So we get '1-1' only in this case, since it's one phrase to one phrase.</p>
+<h2 id="now-what">Now what?</h2>
+<p>So we have the trees, and we can parse alignments.</p>
+<p>There are a couple problems that are of interest here.</p>
+<p>The first is language detection. This isn't really helpful in the sense of solving language detection itself, since you need an alignment (and presumably if you're generating that, you already know what language you're dealing with), but being able to identify which language is being translated would be a good sanity check against the known linguistic phylogenic tree (i.e, languages far apart should be easy to tell apart, and languages close together would be harder to tell apart). It could also be useful to do language detection as a sort of sanity check - if you are attempting to do an alignment and the language detection thinks you're in another language altogether, then there's a very, very low probability that your alignment is correct. This could, for example, be an indicator feature in Phrasal (ie.: alignment matches translation pair?)</p>
+<p>The second is looking at translation itself. We could either try improving phrase-based translation by giving the probability that some sequence of tokens aligns the way that it does, or we could go or tree-based alignment models, which generate a set of grammar rules that are used to parse/generate a sentence.</p>
+<h2 id="future-directionstodos">Future Directions/TODOS</h2>
+<h3 id="code-fixups">Code fixups</h3>
+<p>We really need to fixup the code so that there isn't so much duplication, and get ourselves into a standard toolset. There's a lot of copy-pasting I did to try and keep things as small scripts, which we can remove.</p>
+<h3 id="adding-pos-tags-or-raw-terminals-themselves.">Adding POS tags, or raw terminals themselves.</h3>
+<p>Moses' tree based algorithms use the actual words themselves when trying to generate rules. That could be a bit much considering our corpora sizes (we either need to run an aligner, generate alignments, use those alignments to bootstrap our model, or stick to the test sets of standard alignment problems as the data for our problem).</p>
+<p>A good intermediate would be POS tags. Simply looking at the subtrees with no distinguishing terminals seems rather weak. The only feature you get there is the number of terminals, which doesn't seem like it would help very much.</p>
+<p>Here's what that looks like. To get this output, run <code>treegeneration.py -l word-alignment-data/English-Hindi.test/english-hindi.alignment | subtrees | sort | uniq -c | sort -n</code> from the main directory.</p>
+<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)))
+   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)))
+   <span class="dv">2</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) <span class="kw">*</span>)
+   <span class="dv">2</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">3</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">3</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)))
+   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)) <span class="kw">*</span>)
+   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">4</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">4</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+   <span class="dv">5</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">6</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">7</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">7</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+   <span class="dv">9</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+   <span class="dv">9</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
+  <span class="dv">11</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+  <span class="dv">11</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+  <span class="dv">11</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
+  <span class="dv">12</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+  <span class="dv">14</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
+  <span class="dv">20</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+  <span class="dv">24</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>)
+  <span class="dv">26</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
+  <span class="dv">43</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
+ <span class="dv">123</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
+ <span class="dv">269</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)</code></pre></div>
+<p>This is the English-Hindi test data, which has 90 examples, and is really not large enough to have anything much specific. Even then, this isn't very interesting to look at, and I doubt that this means much without some more interesting terminal descriptions than &quot;we don't care what's here&quot;.</p>
+<h3 id="depth">Depth</h3>
+<p>One interesting feature that I came up with is called depth. If you want to compute depth for each tree, just run <code>... | flatten | awk 'BEGIN{FS=&quot;(&quot;} {print NF}'</code> where ... is whatever generates the trees.</p>
+<p>Depth tells you how &quot;complex&quot; the alignment tree is. For something like french, the flattened tree generally has depth 1 (meaning there's just one :N and everything is already in the order that it needs to be.), at all lengths.</p>
+<p>For something like Hindi, the depth is higher, on the order of 4 deep/word when the sentence is longer than 5 terminals.</p>
+<p>Normalizing by the length of the sentence gives you a pretty stable metric to determine which language you're dealing with (of course, you could just include both depth and length as features and fit in 2-D space).</p>
+<p>Here's what d/L looks like:</p>
+<p><img src="depths.png" style="width:100%;"/> green is swedish, blue is french, and red is hindi.</p>
+<p>We're already seeing some nice differences! The spikes at 0 come from very short examples, most of which are just phrases that translate directly anyway.</p>
+</body>
+</html>
