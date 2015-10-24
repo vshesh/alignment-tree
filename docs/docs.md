@@ -38,7 +38,7 @@ and R reverses the order.
 As an example, consider an alignment problem with the sentences "I went home" 
 and "Mein ghar gaya" (phoneticized Hindi, translated to I home went).
 
-Now, the appropriate tree here would be (N I (R went home)) to transform the
+Now, the appropriate tree here would be `(N I (R went home))` to transform the
 original ordering of the words to the new ordering in hindi. 
 
 There are still issues with this approach, such as spurious words, and phrase
