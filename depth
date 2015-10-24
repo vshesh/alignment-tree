@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+from __future__ import print_function
+
 import sys
 
 #Sample Usage:
@@ -27,12 +29,6 @@ def parse_sexp(string):
             word = word + c
     return sexp[0]
 
-
-def depth(sexp):
-  if sexp == None: return 0
-  if not isinstance(sexp, list): return 0
-
-  return 1 + max(map(depth, sexp[1:]))
 
 if __name__ == '__main__':
   for line in sys.stdin:

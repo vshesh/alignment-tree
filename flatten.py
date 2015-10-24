@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+from __future__ import print_function
+
 import sys
 import toolz as t
 
@@ -44,11 +46,18 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
+
+def depth(sexp):
+  if sexp == None: return 0
+  if not isinstance(sexp, list): return 0
+
+  return 1 + max(map(depth, sexp[1:]))
+
+
 def dumptree(tree):
     if (tree == None): return ''
     if not isinstance(tree, list): return str(tree)
     return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
-
 
 if __name__ == '__main__':
   for line in sys.stdin:
