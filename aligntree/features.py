@@ -76,13 +76,13 @@ features = [depth, num_nodes]
 
 if __name__ == '__main__':
 
-  opts, args = getopt.getopt(sys.argv[1:], 'l', ['--language'])
+  opts, args = getopt.getopt(sys.argv[1:], 'l:', ['--language'])
   language = None
   for o,a in opts:
-    if o is '-l' or o is '--language':
-      language = a
+    if o == '-l' or o == '--language':
+      language = a + ','
   
-  print('language' if language is not None else '' + 
+  print(('language,' if language is not None else '') + 
         ','.join(f.__name__ for f in features))
   
   for line in fileinput.input(args):
