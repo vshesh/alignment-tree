@@ -281,7 +281,7 @@ if __name__ == '__main__':
         print 'usage: treegeneration [-jl] /path/to/alignmentfile'
 
     opts, args = getopt(sys.argv[1:], 'jl', ['--json', '--lisp'])
-    outformat = 'normal'
+    outformat = 'lisp'
     for o,a in opts:
         if o == '-j' or o == '--json':
             outformat = 'json'
