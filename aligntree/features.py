@@ -3,33 +3,42 @@ from __future__ import print_function
 
 import sys
 import toolz as t
+import fileinput
+import getopt
 
+# --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
 #>>> parse_sexp("(+ 5 (+ 3 5))")
 #[['+', '5', ['+', '3', '5']]]
 def parse_sexp(string):
-    sexp = [[]]
-    word = ''
-    in_str = False
-    for c in string:
-        if c == '(' and not in_str:
-            sexp.append([])
-        elif c == ')' and not in_str:
-            if(len(word) > 0):
-                sexp[-1].append(word)
-                word = ''
-            temp = sexp.pop()
-            sexp[-1].append(temp)
-        elif c in (' ', '\n', '\t') and not in_str:
-            if len(word) > 0:
-                sexp[-1].append(word)
-                word = ''
-        elif c == '\"':
-            in_str = not in_str
-        else:
-            word = word + c
-    return sexp[0]
+  sexp = [[]]
+  word = ''
+  in_str = False
+  for c in string:
+    if c == '(' and not in_str:
+      sexp.append([])
+    elif c == ')' and not in_str:
+      if(len(word) > 0):
+        sexp[-1].append(word)
+        word = ''
+      temp = sexp.pop()
+      sexp[-1].append(temp)
+    elif c in (' ', '\n', '\t') and not in_str:
+      if len(word) > 0:
+        sexp[-1].append(word)
+        word = ''
+    elif c == '\"':
+      in_str = not in_str
+    else:
+      word = word + c
+  return sexp[0]
 
+def dumptree(tree):
+    if (tree == None): return ''
+    if not isinstance(tree, list): return str(tree)
+    return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
+
+# ------------------------ Transformations -----------------------------------
 
 def flatten(sexp):
   if sexp is None: return None
@@ -48,26 +57,34 @@ def flatten(sexp):
   return [sexp[0]]+children
 
 
+# ----------------------- Features -------------------------------------------
+
 def depth(tree):
   if tree == None: return 0
   if not isinstance(tree, list): return 0
   return 1 + max(depth(x) for x in tree[1:])
+
 
 def num_nodes(tree):
   if tree == None: return 0
   if not isinstance(tree, list): return 0
   return 1 + sum(num_nodes(c) for c in tree[1:])
 
-def dumptree(tree):
-    if (tree == None): return ''
-    if not isinstance(tree, list): return str(tree)
-    return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
-
 
 features = [depth, num_nodes]
 
+
 if __name__ == '__main__':
-  print(','.join(f.__name__ for f in features))
-  for line in sys.stdin:
+
+  opts, args = getopt.getopt(sys.argv[1:], 'l', ['--language'])
+  language = None
+  for o,a in opts:
+    if o is '-l' or o is '--language':
+      language = a
+  
+  print('language' if language is not None else '' + 
+        ','.join(f.__name__ for f in features))
+  
+  for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print(','.join(str(f(tree)) for f in features))
+    print( (language or '') + ','.join(str(f(tree)) for f in features))

@@ -4,6 +4,7 @@ import sys
 from numpy import array
 import itertools
 from getopt import getopt
+import fileinput
 
 # data pertaining to the various kinds of operations. It's a double dictionary -
 # each order has a dictionary of a tuple containing and order and 
@@ -277,9 +278,6 @@ def jsonTree(stack, alignment, linenum):
 
 if __name__ == '__main__':
 
-    if len(sys.argv) < 2:
-        print 'usage: treegeneration [-jl] /path/to/alignmentfile'
-
     opts, args = getopt(sys.argv[1:], 'jl', ['--json', '--lisp'])
     outformat = 'lisp'
     for o,a in opts:
@@ -289,11 +287,9 @@ if __name__ == '__main__':
             outformat = 'lisp'
 
 
-    f = open(args[0])
     if outformat is 'json': print '['
     count= 1
-    while True:
-        line = f.readline()
+    for line in fileinput.input(args):
         if(line.strip() == ""):
             break
         order = sanitize(sanitize2(line.split()))

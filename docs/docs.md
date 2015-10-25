@@ -360,6 +360,52 @@ not large enough to have anything much specific. Even then, this isn't very
 interesting to look at, and I doubt that this means much without some more
 interesting terminal descriptions than "we don't care what's here".
 
+## Data
+
+Languages:
+* [Europe](http://www.statmt.org/europarl/)
+    * German
+    * Spanish 
+    * French
+* South Asia
+    * [Hindi](http://ufallab.ms.mff.cuni.cz/~bojar/hindencorp/)
+* Arabic (need to clean/prepare)
+* East Asia
+    * [Japanese](http://phontron.com/japanese-translation-data.php)
+    * Mandarin
+* Africa
+    * [Xhosa](https://www.ru.ac.za/englishlanguageandlinguistics/research/pastresearchprojects/xhosaenglishcorpus/) (need to email)
+
+
+
+## Features
+
+* Basics
+    * length of the sentence
+        * (highest value terminal in the tree)
+    * number of nodes in the tree `done`
+    * number of each operation
+        * N, R, 4one etc
+    * depth `done`
+* Positionality
+    * max/min height of each operation (not N)
+    * mean height of each operation (not N)
+        * height of each 'R' subtree and take average
+    * mean height of tree
+        * height from each leaf averaged
+* Ranges
+    * max range of operation
+        * how many nodes does the operation span 
+    * mean range of operation
+        * mean # of nodes the operation spans (so R(1,3) spans 2, etc) 
+    * max children of a node for each operation type in flattened tree
+        * this is slightly different from above since it doesn't include sections where another operation is working.
+
+* Transformations
+    * flatten
+    * subtrees
+    * non N subtrees
+
 ### Depth
 
 One interesting feature that I came up with is called depth. If you want to
