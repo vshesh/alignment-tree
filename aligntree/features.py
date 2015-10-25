@@ -70,8 +70,23 @@ def num_nodes(tree):
   if not isinstance(tree, list): return 0
   return 1 + sum(num_nodes(c) for c in tree[1:])
 
+def num_ops(op):
 
-features = [depth, num_nodes]
+  def num_normal_switches(tree):
+    if tree == None: return 0
+    if not isinstance(tree, list): return 0
+    if tree[0] == op: return 1 + sum(num_normal_switches(c) for c in tree[1:])
+    return sum(num_normal_switches(c) for c in tree[1:])
+
+  return num_normal_switches
+
+
+def dumptree(tree):
+    if (tree == None): return ''
+    if not isinstance(tree, list): return str(tree)
+    return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
+
+features = [depth, num_nodes, num_ops(':N'), num_ops(':R')]
 
 
 if __name__ == '__main__':
