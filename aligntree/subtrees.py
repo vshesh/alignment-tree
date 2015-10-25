@@ -37,10 +37,12 @@ def dumptree(tree):
   if not isinstance(tree, list): return str(tree)
   return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
+
 def dumpshape(tree):
   if tree is None: return ''
   if not isinstance(tree,list): return '*'
   return '('+tree[0] + ' ' + ' '.join(dumpshape(child) for child in tree[1:]) + ')'  
+
 
 def subtrees(sexp):
   if sexp is None: return

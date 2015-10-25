@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+from __future__ import print_function
+
 import sys
 import toolz as t
 
@@ -28,6 +30,7 @@ def parse_sexp(string):
             word = word + c
     return sexp[0]
 
+
 def flatten(sexp):
   if sexp is None: return None
   if not isinstance(sexp, list): return sexp
@@ -44,10 +47,12 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
+
 def depth(tree):
   if tree == None: return 0
-  if not instance(tree, list): return 0
-  return 1 + max(depth(x) for x in sexp[1:])
+  if not isinstance(tree, list): return 0
+  return 1 + max(depth(x) for x in tree[1:])
+
 
 def dumptree(tree):
     if (tree == None): return ''
@@ -55,6 +60,10 @@ def dumptree(tree):
     return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
 
+features = [depth]
+
 if __name__ == '__main__':
+  print(','.join(f.__name__ for f in features))
   for line in sys.stdin:
-    print(dumptree(flatten(parse_sexp(line)[0])))
+    tree = parse_sexp(line)[0]
+    print(','.join(str(f(tree)) for f in features))
