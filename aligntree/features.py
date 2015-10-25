@@ -33,6 +33,7 @@ def parse_sexp(string):
       word = word + c
   return sexp[0]
 
+
 def dumptree(tree):
     if (tree == None): return ''
     if not isinstance(tree, list): return str(tree)
@@ -57,32 +58,38 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
-
 # ----------------------- Features -------------------------------------------
 
+def length(tree):
+  if not isinstance(tree, list): return tree
+  return max(length(c) for c in tree[1:])
+
+  
 def depth(tree):
-  if tree == None: return 0
   if not isinstance(tree, list): return 0
   return 1 + max(depth(x) for x in tree[1:])
 
 
 def num_nodes(tree):
-  if tree == None: return 0
   if not isinstance(tree, list): return 0
   return 1 + sum(num_nodes(c) for c in tree[1:])
 
   
-def num_ops(op):
-  def num_normal_switches(tree):
-    if tree == None: return 0
+def op_counter(op):
+  def num_ops(tree):
     if not isinstance(tree, list): return 0
-    if tree[0] == op: return 1 + sum(num_normal_switches(c) for c in tree[1:])
-    return sum(num_normal_switches(c) for c in tree[1:])
+    return (1 if tree[0] == op else 0) + sum(num_ops(c) for c in tree[1:])
 
-  return num_normal_switches
+  return num_ops
 
 
-features = [depth, num_nodes, num_ops(':N'), num_ops(':R')]
+features = [ 
+  length,
+  num_nodes,
+  depth, 
+  ('num_normal', op_counter(':N')), 
+  ('num_reverse', op_counter(':R'))
+]
 
 
 if __name__ == '__main__':
@@ -94,8 +101,9 @@ if __name__ == '__main__':
       language = a + ','
   
   print(('language,' if language is not None else '') + 
-        ','.join(f.__name__ for f in features))
+        ','.join(x[0] if isinstance(x,tuple) else x.__name__ for x in features))
   
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print( (language or '') + ','.join(str(f(tree)) for f in features))
+    print( (language or '') + ','.join(
+      str((f[1] if isinstance(f, tuple) else f)(tree)) for f in features))
