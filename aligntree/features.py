@@ -36,7 +36,7 @@ def parse_sexp(string):
 def dumptree(tree):
     if (tree == None): return ''
     if not isinstance(tree, list): return str(tree)
-    return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
+    return '('+tree[0]+' '+ ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
 # ------------------------ Transformations -----------------------------------
 
@@ -52,7 +52,8 @@ def flatten(sexp):
   # number heads are fine, we just want to make sure that the
   # string type heads are all the same
   if len(heads) <= 1:
-    return list(t.cons(sexp[0], t.concat(x[1:] if isinstance(x,list) else [x] for x in children)))
+    return list(t.cons(sexp[0], t.concat(x[1:] if isinstance(x,list) else [x] 
+                                         for x in children)))
 
   return [sexp[0]]+children
 
@@ -70,8 +71,8 @@ def num_nodes(tree):
   if not isinstance(tree, list): return 0
   return 1 + sum(num_nodes(c) for c in tree[1:])
 
+  
 def num_ops(op):
-
   def num_normal_switches(tree):
     if tree == None: return 0
     if not isinstance(tree, list): return 0
@@ -80,11 +81,6 @@ def num_ops(op):
 
   return num_normal_switches
 
-
-def dumptree(tree):
-    if (tree == None): return ''
-    if not isinstance(tree, list): return str(tree)
-    return '('+tree[0] + ' ' + ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
 features = [depth, num_nodes, num_ops(':N'), num_ops(':R')]
 
