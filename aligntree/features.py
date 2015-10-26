@@ -83,13 +83,22 @@ def op_counter(op):
   return num_ops
 
 
+def flatten_function(f):
+  #returns a new form
+  def flattened_featurizer(tree):
+    return f(flatten(tree))
+  return flattened_featurizer
+
+
 features = [ 
-  length,
-  num_nodes,
-  depth, 
+  (length.__name__, length),
+  (num_nodes.__name__, num_nodes),
+  (depth.__name__, depth), 
   ('num_normal', op_counter(':N')), 
   ('num_reverse', op_counter(':R'))
 ]
+
+features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
 
 
 if __name__ == '__main__':
@@ -101,9 +110,10 @@ if __name__ == '__main__':
       language = a + ','
   
   print(('language,' if language is not None else '') + 
-        ','.join(x[0] if isinstance(x,tuple) else x.__name__ for x in features))
+        ','.join(x[0] for x in features))
   
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
+    print(tree)
     print( (language or '') + ','.join(
-      str((f[1] if isinstance(f, tuple) else f)(tree)) for f in features))
+      str(f[1](tree)) for f in features))

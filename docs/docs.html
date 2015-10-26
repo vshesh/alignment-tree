@@ -1,330 +1,1389 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
-  <title></title>
-  <style type="text/css">code{white-space: pre;}</style>
-  <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-  </style>
-  <style>
-  body {
-    font-family: "Avenir Next", Helvetica, Arial, sans-serif;
-    padding:1em;
-    margin:auto;
-    max-width:42em;
-    background:#fefefe;
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAzUABAAAAAAFNgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABbAAAABwAAAAcZMzaOEdERUYAAAGIAAAAHQAAACAAOQAET1MvMgAAAagAAAA+AAAAYHqhde9jbWFwAAAB6AAAAFIAAAFa4azkLWN2dCAAAAI8AAAAKAAAACgFgwioZnBnbQAAAmQAAAGxAAACZVO0L6dnYXNwAAAEGAAAAAgAAAAIAAAAEGdseWYAAAQgAAAFDgAACMz7eroHaGVhZAAACTAAAAAwAAAANgWEOEloaGVhAAAJYAAAAB0AAAAkDGEGa2htdHgAAAmAAAAAEwAAADBEgAAQbG9jYQAACZQAAAAaAAAAGgsICJBtYXhwAAAJsAAAACAAAAAgASgBD25hbWUAAAnQAAACZwAABOD4no+3cG9zdAAADDgAAABsAAAAmF+yXM9wcmVwAAAMpAAAAC4AAAAusPIrFAAAAAEAAAAAyYlvMQAAAADLVHQgAAAAAM/u9uZ4nGNgZGBg4ANiCQYQYGJgBEJuIGYB8xgABMMAPgAAAHicY2Bm42OcwMDKwMLSw2LMwMDQBqGZihmiwHycoKCyqJjB4YPDh4NsDP+BfNb3DIuAFCOSEgUGRgAKDgt4AAB4nGNgYGBmgGAZBkYGEAgB8hjBfBYGCyDNxcDBwMTA9MHhQ9SHrA8H//9nYACyQyFs/sP86/kX8HtB9UIBIxsDXICRCUgwMaACRoZhDwA3fxKSAAAAAAHyAHABJQB/AIEAdAFGAOsBIwC/ALgAxACGAGYAugBNACcA/wCIeJxdUbtOW0EQ3Q0PA4HE2CA52hSzmZDGe6EFCcTVjWJkO4XlCGk3cpGLcQEfQIFEDdqvGaChpEibBiEXSHxCPiESM2uIojQ7O7NzzpkzS8qRqnfpa89T5ySQwt0GzTb9Tki1swD3pOvrjYy0gwdabGb0ynX7/gsGm9GUO2oA5T1vKQ8ZTTuBWrSn/tH8Cob7/B/zOxi0NNP01DoJ6SEE5ptxS4PvGc26yw/6gtXhYjAwpJim4i4/plL+tzTnasuwtZHRvIMzEfnJNEBTa20Emv7UIdXzcRRLkMumsTaYmLL+JBPBhcl0VVO1zPjawV2ys+hggyrNgQfYw1Z5DB4ODyYU0rckyiwNEfZiq8QIEZMcCjnl3Mn+pED5SBLGvElKO+OGtQbGkdfAoDZPs/88m01tbx3C+FkcwXe/GUs6+MiG2hgRYjtiKYAJREJGVfmGGs+9LAbkUvvPQJSA5fGPf50ItO7YRDyXtXUOMVYIen7b3PLLirtWuc6LQndvqmqo0inN+17OvscDnh4Lw0FjwZvP+/5Kgfo8LK40aA4EQ3o3ev+iteqIq7wXPrIn07+xWgAAAAABAAH//wAPeJyFlctvG1UUh+/12DPN1B7P3JnYjj2Ox4/MuDHxJH5N3UdaEUQLqBIkfQQioJWQ6AMEQkIqsPGCPwA1otuWSmTBhjtps2ADWbJg3EpIXbGouqSbCraJw7kzNo2dRN1cnXN1ZvT7zuuiMEI7ncizyA0URofRBJpCdbQuIFShYY+GZRrxMDVtih5TwQPHtXDFFSIKoWIbuREBjLH27Ny4MsbVx+uOJThavebgVrNRLAiYx06rXsvhxLgWx9xpfHdrs/ekc2Pl2cpPCVEITQpwbj8VQhfXSq2m+Wxqaq2D73Kne5e3NjHqQNj3CRYlJlgUl/jRNP+2Gs2pNYRQiOnmUaQDqm30KqKiTTWPWjboxnTWpvgxjXo0KrtZXAHt7hwIz0YVcj88JnKlJKi3NPAwLyDwZudSmJSMMJFDYaOkaol6XtESx3Gt1VTytdZJ3DCLeaVhVnCBH1fycHTxFXwPX+l2e3d6H/TufGGmMTLTnbSJUdo00zuBswMO/nl3YLeL/wnu9/limCuD3vC54h5NBVz6Li414AI8Vx3iiosKcQXUbrvhFFiYb++HN4DaF4XzFW0fIN4XDWJ3a3XQoq9V8WiyRmdsatV9xUcHims1JloH0YUa090G3Tro3mC6c01f+YwCPquINr1PTaCP6rVTOOmf0GE2dBc7zWIhji3/5MchSuBHgDbU99RMWt3YUNMZMJmx92YP6NsHx/5/M1yvInpnkIOM3Z8fA3JQ2lW1RFC1KaBPDFXNAHYYvGy73aYZZZ3HifbeuiVZCpwA3oQBs0wGPYJbJfg60xrKEbKiNtTe1adwrpBRwlAuQ3q3VRaX0QmQ9a49BTSCuF1MLfQ6+tinOubRBZuWPNoMevGMT+V41KitO1is3D/tpMcq1JHZqDHGs8DoYGDkxJgKjHROeTCmhZvzPm9pod+ltKm4PN7Dyvvldlpsg8D+4AUJZ3F/JBstZz7cbFRxsaAGV6yX/dkcycWf8eS3QlQea+YLjdm3yrOnrhFpUyKVvFE4lpv4bO3Svx/6F/4xmiDu/RT5iI++lko18mY1oX+5UGKR6kmVjM/Zb76yfHtxy+h/SyQ0lLdpdKy/lWB6szatetQJ8nZ80A2Qt6ift6gJeavU3BO4gtxs/KCtNPVibCtYCWY3SIlSBPKXZALXiIR9oZeJ1AuMyxLpHIy/yO7vSiSE+kZvk0ihJ30HgHfzZtEMmvV58x6dtqns0XTAW7Vdm4HJ04OCp/crOO7rd9SGxQAE/mVA9xRN+kVSMRFF6S9JFGUtthkjBA5tFCWc2l4V43Ex9GmUP3SI37Jjmir9KqlaDJ4S4JB3vuM/jzyH1+8MuoZ+QGzfnvPoJb96cZlWjMcKLfgDwB7E634JTY+asjsPzS5CiVnEWY+KsrsIN5rn3mAPjqmQBxGjcGKB9f9ZxY3mYC2L85CJ2FXIxKKyHk+dg0FHbuEc7D5NzWUX32WxFcWNGRAbvwSx0RmIXVDuYySafluQBmzA/ssqJAMLnli+WIC90Gw4lm85wcp0qjArEDPJJV/sSx4P9ungTpgMw5gVC1XO4uULq0s3v1rqLi0vX/z65vlH50f8T/RHmSPTk5xxWBWOluMT6WiOy+tdvWxlV/XQb3o3c6Ssr+r6I708GsX9/nzp1tKFh0s3v7m4vAy/Hnb/KMOvc1wump6Il48K6mGDy02X9Yd65pa+nQIjk76lWxCkG8NBCP0HQS9IpAAAeJxjYGRgYGBhcCrq214Qz2/zlUGenQEEzr/77oug/zewFbB+AHI5GJhAogBwKQ0qeJxjYGRgYH3/P46BgZ0BBNgKGBgZUAEPAE/7At0AAAB4nGNngAB2IGYjhBsYBAAIYADVAAAAAAAAAAAAAFwAyAEeAaACCgKmAx4DggRmAAAAAQAAAAwAagAEAAAAAAACAAEAAgAWAAABAAChAAAAAHiclZI7bxQxFIWPd/JkUYQChEhIyAVKgdBMskm1QkKrRETpQiLRUczueB/K7HhlOxttg8LvoKPgP9DxFxANDR0tHRWi4NjrPIBEgh1p/dm+vufcawNYFWsQmP6e4jSyQB2fI9cwj++RE9wTjyPP4LYoI89iWbyLPIe6+Bh5Hs9rryMv4GbtW+RF3EhuRa7jbrIbeQkPkjdUETOLnL0Kip4FVvAhco1RXyMnSPEz8gzWxE7kWTwUp5HnsCLeR57HW/El8gJWa58iL+JO7UfkOh4l9yMv4UnyEtvQGGECgwF66MNBooF1bGCL1ELB/TYU+ZBRlvsKQ44Se6jQ4a7hef+fh72Crv25kp+8lNWGmeKoOI5jJLb1aGIGvb6TjfWNLdkqdFvJw4l1amjlXtXRZqRN7lSRylZZyhBqpVFWmTEXgWfUrpi/hZOQXdOd4rKuXOtEWT3k5IArPRzTUU5tHKjecZkTpnVbNOnt6jzN8240GD4xtikvZW56043rPMg/dS+dlOceXoR+WPbJ55Dsekq1lJpnypsMUsYOdCW30o103Ytu/lvh+5RWFLfBjm9/N8hJntPhvx92rnoE/kyHdGasGy754kw36vsVf/lFeBi+0COu+cfgQr42G3CRpeLoZ53gmfe3X6rcKt5oVxnptHR9JS8ehVUd5wvvahN2uqxOOpMXapibI5k7Zwbt4xBSaTfoKBufhAnO/uqNcfK8OTs0OQ6l7JIqFjDhYj5WcjevCnI/1DDiI8j4ndWb/5YzDZWh79yomWXeXj7Nnw70/2TIeFPTrlSh89k1ObOSRVZWZfgF0r/zJQB4nG2JUQuCQBCEd07TTg36fb2IyBaLd3vWaUh/vmSJnvpgmG8YcmS8X3Shf3R7QA4OBUocUKHGER5NNbOOEvwc1txnuWkTRb/aPjimJ5vXabI+3VfOiyS15UWvyezM2xiGOPyuMohOH8O8JiO4Af+FsAGNAEuwCFBYsQEBjlmxRgYrWCGwEFlLsBRSWCGwgFkdsAYrXFhZsBQrAAA=) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
+
+  100% {
+    background-position: 60px 0;
   }
-  
-  h1 {
-    color: #000000;
-    font-size: 28pt;
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
   }
-  
-  h2 {
-    border-bottom: 1px solid #CCCCCC;
-    color: #000000;
-    font-size: 24px;
+
+  100% {
+    background-position: 60px 0;
   }
-  
-  h3 {
-    font-size: 18px;
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
   }
-  
-  h4 {
-    font-size: 16px;
+
+  100% {
+    background-position: 60px 0;
   }
-  
-  h5 {
-    font-size: 14px;
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
   }
-  
-  h6 {
-    color: #777777;
-    background-color: inherit;
-    font-size: 14px;
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
   }
-  
-  hr {
-    height: 0.2em;
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
     border: 0;
-    color: #CCCCCC;
-    background-color: #CCCCCC;
   }
-  
-  p, blockquote, ul, ol, dl, li, table, pre {
-    margin: 15px 0;
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
   }
-  
-  a, a:visited {
-    color: #4183C4;
-    background-color: inherit;
-    text-decoration: none;
+
+  .markdown-body .headeranchor-link {
+    display: none;
   }
-  
-  #message {
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    display:block;
-    width:100%;
-    height:60px;
-    margin:6px 0px;
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
   }
-  
-  button, #ws {
-    font-size: 10pt;
-    padding: 4px 6px;
-    border-radius: 5px;
-    border: 1px solid #bbb;
-    background-color: #eee;
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
   }
-  
-  code, pre, #ws, #message {
-    font-family: Monaco;
-    font-size: 10pt;
-    border-radius: 3px;
-    background-color: #F8F8F8;
-    color: inherit;
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
   }
-  
-  code {
-    border: 1px solid #EAEAEA;
-    margin: 0 2px;
-    padding: 0 5px;
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
-  
-  pre {
-    border: 1px solid #CCCCCC;
-    overflow: auto;
-    padding: 4px 8px;
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
   }
-  
-  pre > code {
-    border: 0;
-    margin: 0;
-    padding: 0;
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
-  
-  #ws { background-color: #f8f8f8; }
-  
-  .send { color:#77bb77; }
-  .server { color:#7799bb; }
-  .error { color:#AA0000; }
-  </style>
-</head>
-<body>
-<h1 id="alignment-trees">Alignment Trees</h1>
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><title>docs</title></head><body><article class="markdown-body"><h1 id="alignment-trees"><a name="user-content-alignment-trees" href="#alignment-trees" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Alignment Trees</h1>
 <p>Vishesh Gupta</p>
-<h2 id="motivation">Motivation</h2>
-<p>The primary problems in translation have always been selecting the appropriate words to translate to (an issue of dictionary), and then rearranging them in the most fluent way possible (the issue of alignment). Of the two, Alignment Trees deal with the second.</p>
-<p>Trivially, the ideal rearrangement is one of the possible permutations of the sentence. However, considering all of the permutations quickly becomes unwieldy, mostly because there are too many variations of sentences and too many permutations to handle.</p>
-<p>However, <a href="http://delivery.acm.org/10.1145/980000/972707/p377-wu.pdf">DeKai Wu</a> and other researchers have noted that &quot;related information stays together&quot; in previous research. For example, if there is &quot;red car&quot; in english, it might become &quot;autombile roja&quot; in spanish, but the word for red and the word for car would never be very far from each other.</p>
-<p>What this suggests (and follows from our own intuition of grammar) is that there is some tree-like structure to natural language, and that some of those subtrees have the same leaves, but in different orders.</p>
-<p>In that case, it should be possible to map one grammar tree to another grammar tree (or the corresponding subtrees) and learn when those trees are similar or different. This is generally called tree-based translation, and there are many algorithms for it on the <a href="http://www.statmt.org/moses/?n=Moses.SyntaxTutorial#ntoc1">moses tree-based translation page</a></p>
-<p>DeKai Wu et all concieved of a tree of operations that map the order of the source language to that of the target language. His intuition was that these mappings could be produced by simply reordering each pair of words, with two operations - N and R, where N preserves order and R reverses the order.</p>
-<p>As an example, consider an alignment problem with the sentences &quot;I went home&quot; and &quot;Mein ghar gaya&quot; (phoneticized Hindi, translated to I home went).</p>
-<p>Now, the appropriate tree here would be (N I (R went home)) to transform the original ordering of the words to the new ordering in hindi.</p>
-<p>There are still issues with this approach, such as spurious words, and phrase alignments among other problems, and I will discuss how we dealt with those.</p>
-<h2 id="how-to">How To</h2>
-<p>Alignment trees are made by taking a parallel alignment problem such as</p>
+<h2 id="motivation"><a name="user-content-motivation" href="#motivation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Motivation</h2>
+<p>The primary problems in translation have always been selecting the appropriate<br />
+words to translate to (an issue of dictionary), and then rearranging them<br />
+in the most fluent way possible (the issue of alignment). <br />
+Of the two, Alignment Trees deal with the second. </p>
+<p>Trivially, the ideal rearrangement is one of the possible permutations of <br />
+the sentence. However, considering all of the permutations quickly becomes<br />
+unwieldy, mostly because there are too many variations of sentences and too<br />
+many permutations to handle. </p>
+<p>However, <a href="http://delivery.acm.org/10.1145/980000/972707/p377-wu.pdf">DeKai Wu</a> <br />
+and other researchers have noted that &ldquo;related information<br />
+stays together&rdquo; in previous research. For example, if there is &ldquo;red car&rdquo; in<br />
+english, it might become &ldquo;autombile roja&rdquo; in spanish, but the word for red<br />
+and the word for car would never be very far from each other. </p>
+<p>What this suggests (and follows from our own intuition of grammar) is that<br />
+there is some tree-like structure to natural language, and that some of those<br />
+subtrees have the same leaves, but in different orders. </p>
+<p>In that case, it should be possible to map one grammar tree to another<br />
+grammar tree (or the corresponding subtrees) and learn when those trees<br />
+are similar or different. This is generally called tree-based translation, and<br />
+there are many algorithms for it on the <br />
+<a href="http://www.statmt.org/moses/?n=Moses.SyntaxTutorial#ntoc1">moses tree-based translation page</a></p>
+<p>DeKai Wu et all concieved of a tree of operations that map the order of the<br />
+source language to that of the target language. <br />
+His intuition was that these mappings could be produced by simply reordering<br />
+each pair of words, with two operations - N and R, where N preserves order<br />
+and R reverses the order. </p>
+<p>As an example, consider an alignment problem with the sentences &ldquo;I went home&rdquo; <br />
+and &ldquo;Mein ghar gaya&rdquo; (phoneticized Hindi, translated to I home went).</p>
+<p>Now, the appropriate tree here would be <code>(N I (R went home))</code> to transform the<br />
+original ordering of the words to the new ordering in hindi. </p>
+<p>There are still issues with this approach, such as spurious words, and phrase<br />
+alignments among other problems, and I will discuss how we dealt with those.</p>
+<h2 id="how-to"><a name="user-content-how-to" href="#how-to" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>How To</h2>
+<p>Alignment trees are made by taking a parallel alignment problem such as </p>
 <pre><code>english: The Government will help develop customer satisfaction indices ,  and encourage their inclusion in existing and future benchmarking schemes .
 hindi: सरकार सेवाओं से उपभोक्ताओं की संतुष्टी नाँपने के पैमाने विकसित करने और इनको  वर्तमान तथा भविष्य की बैंचमार्किंग स्कीम्ज में शामिल करने के लिए मदद देगी  ।
-alignment: 1-0 2-24 2-25 3-24 3-25 4-9 4-10 5-3 5-4 5-5 6-3 6-4 6-5 7-6 7-7 7-8 9-11 11-12 12-20 12-21 13-19 14-13 15-14 16-15 17-17 18-18 19-26</code></pre>
-<p>And produce a tree like</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">:N</span>
- (<span class="kw">:N</span>
-  (<span class="kw">:N</span>
-   (<span class="kw">:N</span>
-    (<span class="kw">:R</span>
-     (<span class="kw">:R</span>
-      (<span class="kw">:R</span>
-       (<span class="kw">:N</span> <span class="dv">10</span> <span class="dv">11</span>)
-       (<span class="kw">:N</span> <span class="dv">8</span> <span class="dv">9</span>))
-      <span class="dv">7</span>)
-     (<span class="kw">:N</span>
-      (<span class="kw">:N</span>
-       (<span class="kw">:N</span>
-        (<span class="kw">:N</span>
-         (<span class="kw">:N</span>
-          (<span class="kw">:N</span> <span class="dv">0</span> <span class="dv">1</span>)
-          <span class="dv">2</span>)
-         <span class="dv">3</span>)
-        <span class="dv">4</span>)
-       <span class="dv">5</span>)
-      <span class="dv">6</span>))
-    <span class="dv">12</span>)
-   <span class="dv">13</span>)
-  (<span class="kw">:R</span>
-   (<span class="kw">:R</span>
-    (<span class="kw">:R</span>
-     (<span class="kw">:R</span>
-      (<span class="kw">:R</span> <span class="dv">23</span> <span class="dv">22</span>)
-      (<span class="kw">:N</span> <span class="dv">20</span> <span class="dv">21</span>))
-     (<span class="kw">:N</span> <span class="dv">18</span> <span class="dv">19</span>))
-    <span class="dv">17</span>)
-   (<span class="kw">:N</span>
-    (<span class="kw">:N</span> <span class="dv">14</span> <span class="dv">15</span>)
-    <span class="dv">16</span>)))
- <span class="dv">24</span>)</code></pre></div>
-<p>Here's the flattened (simplified) version of this tree:</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">(<span class="kw">:N</span>
- (<span class="kw">:N</span>
-  (<span class="kw">:R</span>
-   (<span class="kw">:R</span>
-    (<span class="kw">:N</span> <span class="dv">10</span> <span class="dv">11</span>)
-    (<span class="kw">:N</span> <span class="dv">8</span> <span class="dv">9</span>)
-    <span class="dv">7</span>)
-   (<span class="kw">:N</span> <span class="dv">0</span> <span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span> <span class="dv">5</span> <span class="dv">6</span>))
-  <span class="dv">12</span>
-  <span class="dv">13</span>)
- (<span class="kw">:R</span>
-  (<span class="kw">:R</span>
-   (<span class="kw">:R</span>
-    (<span class="kw">:R</span> <span class="dv">23</span> <span class="dv">22</span>)
-    (<span class="kw">:N</span> <span class="dv">20</span> <span class="dv">21</span>))
-   (<span class="kw">:N</span> <span class="dv">18</span> <span class="dv">19</span>)
-   <span class="dv">17</span>)
-  (<span class="kw">:N</span> <span class="dv">14</span> <span class="dv">15</span> <span class="dv">16</span>))
- <span class="dv">24</span>)</code></pre></div>
-<p>This is clojure syntax (edn format) for the tree where :N is the normal operation and :R is the reverse operation.</p>
-<p>It may be easier to see this as a operation tree as an actual tree <a href="http://ling-itgp.herokuapp.com/hi/13">online</a>.</p>
-<p>As you can see, taking the leaf nodes in their original order (as given on the right of the picture) and then applying the operations as you go up the tree would take the out of order leaf nodes and put them back in order 0-whatever.</p>
-<p>So this tree represents a series of operations that can reorder a tree from one language to another.</p>
-<p>It's much easier to visually understand if you go to the <a href="http://ling-itgp.herokuapp.com">website</a>. Pressing right/left moves you around the different sentences, and you can choose between french, hindi and swedish.</p>
-<p>One thing to note is that the only required input to the tree-generation is the alignment string. In other words, this problem can take a string like '0-0 1-10 2-3 4-9 ...' and output a tree of operations. From here on out, we will only showcase those strings and trees, not deal with the original words of the sentences.</p>
-<p>Another visual presentation of this is given in these <a href="https://docs.google.com/presentation/d/1NHC_teV0lUH_AUVZpk2JUzwP1myVwXXXAFRsnDe-8R0">slides</a> Play through slides 5-8 to get a picture of how an alignment produces an alignment tree.</p>
-<h2 id="inconsistencies">Inconsistencies</h2>
-<p>As it was stated before, there are some issues with generating these trees. Here's a list of them, and how we got around the problems.</p>
-<h3 id="one-to-many-mapping">One-to-many mapping</h3>
-<p>Here we'd get a string like '1-1 1-2 1-3'. The way to think about this is that some word in one language maps to a phrase in another language. In the situations where there was a contiguous mapping (like in the example given) it was easy to just shrink down the phrase in the target language to one terminal (let's just replace 1,2,3 by 1) and then you'd have '1-1' in the alignment string. This is pretty much the intent of a contiguous one-to-many mapping anyway - the three words it produces are pretty much one entity.</p>
-<p>This gets more confusing with things like split infinitives, when you might see an alignment like '1-1 1-3 2-2'. Now it's impossible to &quot;shrink&quot; the mapping since the phrase is split around another word.</p>
-<p>The solution we came up with is to duplicate the original word (ie., the two 1's are separate entities), which would give you a tree like <code>(N 1 (R 3 2))</code></p>
-<p>For the purposes of identifying these numbers differently, we would uniquely number the 1's. So the new string would be '1-1 2-3 3-2', and the corresponding tree would be <code>(N 1 (R 3 2))</code> with no hassle.</p>
-<p>This seems strange, but it's actually a well known tactic in the generative stories of IBM model 3.</p>
-<h3 id="vanishing-words-one-to-no-mapping">Vanishing words (one-to-no mapping)</h3>
-<p>Basically the string looks like '1-1 3-2' and 2 doesn't go anywhere. The solution we came up with was to copy the previous word's alignment (i.e fold the non-producing word left).</p>
-<p>This isn't the greatest way to do this (and I have some ideas on how to improve the folding). In many languages (english included) it actually makes more sense to fold right (hindi is a good example - heads always come after their modifiers. This is also true of english (i.e, the red car -&gt; lal gadi, but you'd want to fold 'the' right so that it grammatically comes under the clause it's actually part of)). It really depends on which word is being left out of the mix.</p>
-<p>In our current solution, you'd get a new alignment string like '1-1 2-1 3-2'.</p>
-<p>An issue is that the parse tree gets an extra terminal for 2 that didn't exist in the original alignment.</p>
-<p>We actually don't create a new terminal for this reason, and just renumber the old terminals. So we get '1-1 2-3' -&gt; '1-1 2-2' (and we pretend that word #2 doesn't exist.)</p>
-<p>This is actually a bad idea, since it removes information about null alignments. It would be helpful to know that, for example '[a|an|the] noun -&gt; noun' in hindi in almost all cases (hindi doesn't have articles)</p>
-<h3 id="many-to-one-mappings">Many to one mappings</h3>
-<p>This is the opposite of one-to-many.</p>
-<p>In this case, we duplicate the terminal in the target languge, and get '1-1 2-1 3-2' -&gt; '1-1 2-2 3-3' and it parses to <code>(N 1 (N 2 3))</code>.</p>
-<h3 id="materializing-words">Materializing words</h3>
-<p>This is the target side version of the vanishing words. Again, we just fold the non-aligned words into the previous terminal.</p>
-<p>Again, this is problematic, because you may want to fold right in many languages.</p>
-<p>So '1-1 2-3' would become '1-1 1-2 2-3' which would become '1-1 2-2 3-3' per previous rules. We end up with <code>(N 1 (N 2 3))</code>.</p>
-<h3 id="higher-order-operations.">Higher order operations.</h3>
-<p>Try parsing '2 4 1 3' with only N and R operations. You can't.</p>
-<p>The solution to this is to allow higher order operations where needed. They tend to be rare ('2413' and '3142' are the only two length-4 ones, there are 6 length-5, and 46 length-6 ones). If you're curious, this corresponds to the sequence A111111 in the integer sequences dictionary, and it actually has a very beautiful mathematical interpretation as A(n) = # of simple permutations of length n. This makes a whole lot of sense, since one would have to consider the entire sequence's permutation to reverse it back to the original order.</p>
-<p>The next few numbers in the sequence are 338 and 2926. It's really hard to imagine that our minds are dealing with 2926 different permutations of things when we construct sentences, rather than dealing with 46. I've cut off the operations at order 6, and anything larger, I'm attributing to a faulty alignment, or there's something bizarre going on.</p>
-<h3 id="phrase-translations.">phrase translations.</h3>
-<p>Unfortunately, there are lot of shortcuts taken in the data, and one of them are wholesale phrase translations. There are a lot that aren't what I'd call &quot;minimal&quot;, and they tend to contain more words than they need to. <a href="http://ling-itgp.herokuapp.com/fr/19">Here's</a> a good example, if you look at the end of the sentence. It's non minimal because there are a lot of direct translations you could map out of that set, and because 'in' is mapped to two separate phrases next to each other. This is a super bizarre example, and I wasn't able to parse this alignment. I'd say whoever made it was a little confused, but I don't speak french so it's hard for me to verify.</p>
-<p>This normally looks like '1-1 1-2 1-3 2-1 2-2 2-3'. Basically a series of two words in the source maps to a series of three words in the translation.</p>
-<p>The way that I'm dealing with this is to collapse the phrases on both sides to a single terminal. So we get '1-1' only in this case, since it's one phrase to one phrase.</p>
-<h2 id="now-what">Now what?</h2>
-<p>So we have the trees, and we can parse alignments.</p>
-<p>There are a couple problems that are of interest here.</p>
-<p>The first is language detection. This isn't really helpful in the sense of solving language detection itself, since you need an alignment (and presumably if you're generating that, you already know what language you're dealing with), but being able to identify which language is being translated would be a good sanity check against the known linguistic phylogenic tree (i.e, languages far apart should be easy to tell apart, and languages close together would be harder to tell apart). It could also be useful to do language detection as a sort of sanity check - if you are attempting to do an alignment and the language detection thinks you're in another language altogether, then there's a very, very low probability that your alignment is correct. This could, for example, be an indicator feature in Phrasal (ie.: alignment matches translation pair?)</p>
-<p>The second is looking at translation itself. We could either try improving phrase-based translation by giving the probability that some sequence of tokens aligns the way that it does, or we could go or tree-based alignment models, which generate a set of grammar rules that are used to parse/generate a sentence.</p>
-<h2 id="future-directionstodos">Future Directions/TODOS</h2>
-<h3 id="code-fixups">Code fixups</h3>
-<p>We really need to fixup the code so that there isn't so much duplication, and get ourselves into a standard toolset. There's a lot of copy-pasting I did to try and keep things as small scripts, which we can remove.</p>
-<h3 id="adding-pos-tags-or-raw-terminals-themselves.">Adding POS tags, or raw terminals themselves.</h3>
-<p>Moses' tree based algorithms use the actual words themselves when trying to generate rules. That could be a bit much considering our corpora sizes (we either need to run an aligner, generate alignments, use those alignments to bootstrap our model, or stick to the test sets of standard alignment problems as the data for our problem).</p>
-<p>A good intermediate would be POS tags. Simply looking at the subtrees with no distinguishing terminals seems rather weak. The only feature you get there is the number of terminals, which doesn't seem like it would help very much.</p>
-<p>Here's what that looks like. To get this output, run <code>treegeneration.py -l word-alignment-data/English-Hindi.test/english-hindi.alignment | subtrees | sort | uniq -c | sort -n</code> from the main directory.</p>
-<div class="sourceCode"><pre class="sourceCode clojure"><code class="sourceCode clojure">   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)))
-   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:N</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)))
-   <span class="dv">2</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">2</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) <span class="kw">*</span>)
-   <span class="dv">2</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">3</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">3</span> (<span class="kw">:N</span> <span class="kw">*</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)))
-   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)) <span class="kw">*</span>)
-   <span class="dv">3</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">4</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">4</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-   <span class="dv">5</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">6</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">7</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">7</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-   <span class="dv">9</span> (<span class="kw">:R</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-   <span class="dv">9</span> (<span class="kw">:R</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
-  <span class="dv">11</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-  <span class="dv">11</span> (<span class="kw">:R</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-  <span class="dv">11</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>))
-  <span class="dv">12</span> (<span class="kw">:R</span> <span class="kw">*</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-  <span class="dv">14</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>))
-  <span class="dv">20</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
-  <span class="dv">24</span> (<span class="kw">:R</span> <span class="kw">*</span> <span class="kw">*</span>)
-  <span class="dv">26</span> (<span class="kw">:R</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
-  <span class="dv">43</span> (<span class="kw">:N</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>) <span class="kw">*</span>)
- <span class="dv">123</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
- <span class="dv">269</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)</code></pre></div>
-<p>This is the English-Hindi test data, which has 90 examples, and is really not large enough to have anything much specific. Even then, this isn't very interesting to look at, and I doubt that this means much without some more interesting terminal descriptions than &quot;we don't care what's here&quot;.</p>
-<h3 id="depth">Depth</h3>
-<p>One interesting feature that I came up with is called depth. If you want to compute depth for each tree, just run <code>... | flatten | awk 'BEGIN{FS=&quot;(&quot;} {print NF}'</code> where ... is whatever generates the trees.</p>
-<p>Depth tells you how &quot;complex&quot; the alignment tree is. For something like french, the flattened tree generally has depth 1 (meaning there's just one :N and everything is already in the order that it needs to be.), at all lengths.</p>
-<p>For something like Hindi, the depth is higher, on the order of 4 deep/word when the sentence is longer than 5 terminals.</p>
-<p>Normalizing by the length of the sentence gives you a pretty stable metric to determine which language you're dealing with (of course, you could just include both depth and length as features and fit in 2-D space).</p>
-<p>Here's what d/L looks like:</p>
-<p><img src="depths.png" style="width:100%;"/> green is swedish, blue is french, and red is hindi.</p>
-<p>We're already seeing some nice differences! The spikes at 0 come from very short examples, most of which are just phrases that translate directly anyway.</p>
-</body>
-</html>
+alignment: 1-0 2-24 2-25 3-24 3-25 4-9 4-10 5-3 5-4 5-5 6-3 6-4 6-5 7-6 7-7 7-8 9-11 11-12 12-20 12-21 13-19 14-13 15-14 16-15 17-17 18-18 19-26
+</code></pre>
+
+<p>And produce a tree like </p>
+<pre><code class="clojure">(:N
+ (:N
+  (:N
+   (:N
+    (:R
+     (:R
+      (:R
+       (:N 10 11)
+       (:N 8 9))
+      7)
+     (:N
+      (:N
+       (:N
+        (:N
+         (:N
+          (:N 0 1)
+          2)
+         3)
+        4)
+       5)
+      6))
+    12)
+   13)
+  (:R
+   (:R
+    (:R
+     (:R
+      (:R 23 22)
+      (:N 20 21))
+     (:N 18 19))
+    17)
+   (:N
+    (:N 14 15)
+    16)))
+ 24)
+</code></pre>
+
+<p>Here&rsquo;s the flattened (simplified) version of this tree:</p>
+<pre><code class="clojure">(:N
+ (:N
+  (:R
+   (:R
+    (:N 10 11)
+    (:N 8 9)
+    7)
+   (:N 0 1 2 3 4 5 6))
+  12
+  13)
+ (:R
+  (:R
+   (:R
+    (:R 23 22)
+    (:N 20 21))
+   (:N 18 19)
+   17)
+  (:N 14 15 16))
+ 24)
+</code></pre>
+
+<p>This is clojure syntax (edn format) for the tree where :N is the normal operation<br />
+and :R is the reverse operation. </p>
+<p>It may be easier to see this as a operation tree as an actual tree <br />
+<a href="http://ling-itgp.herokuapp.com/hi/13">online</a>.</p>
+<p>As you can see, taking the leaf nodes in their original order (as given on the<br />
+right of the picture) and then applying the operations as you go up the tree<br />
+would take the out of order leaf nodes and put them back in order 0-whatever.</p>
+<p>So this tree represents a series of operations that can reorder a tree from one<br />
+language to another. </p>
+<p>It&rsquo;s much easier to visually understand if you go to the <br />
+<a href="http://ling-itgp.herokuapp.com">website</a>.<br />
+Pressing right/left moves you around the different sentences, and you can <br />
+choose between french, hindi and swedish.</p>
+<p>One thing to note is that the only required input to the tree-generation<br />
+is the alignment string. In other words, this problem can take a string like<br />
+&lsquo;0-0 1-10 2-3 4-9 &hellip;&rsquo; and output a tree of operations. From here on out,<br />
+we will only showcase those strings and trees, not deal with the original<br />
+words of the sentences.</p>
+<p>Another visual presentation of this is given in these <br />
+<a href="https://docs.google.com/presentation/d/1NHC_teV0lUH_AUVZpk2JUzwP1myVwXXXAFRsnDe-8R0">slides</a><br />
+Play through slides 5-8 to get a picture of how an alignment produces an <br />
+alignment tree.</p>
+<h2 id="inconsistencies"><a name="user-content-inconsistencies" href="#inconsistencies" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Inconsistencies</h2>
+<p>As it was stated before, there are some issues with generating these trees.<br />
+Here&rsquo;s a list of them, and how we got around the problems. </p>
+<h3 id="one-to-many-mapping"><a name="user-content-one-to-many-mapping" href="#one-to-many-mapping" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>One-to-many mapping</h3>
+<p>Here we&rsquo;d get a string like &lsquo;1-1 1-2 1-3&rsquo;. <br />
+The way to think about this is that some word in one language maps to a <br />
+phrase in another language. In the situations where there was a contiguous <br />
+mapping (like in the example given) it was easy to just shrink down the phrase<br />
+in the target language to one terminal (let&rsquo;s just replace 1,2,3 by 1) and <br />
+then you&rsquo;d have &lsquo;1-1&rsquo; in the alignment string. This is pretty much the intent<br />
+of a contiguous one-to-many mapping anyway - the three words it produces<br />
+are pretty much one entity.</p>
+<p>This gets more confusing with things like split infinitives, when you might <br />
+see an alignment like &lsquo;1-1 1-3 2-2&rsquo;. Now it&rsquo;s impossible to &ldquo;shrink&rdquo; the <br />
+mapping since the phrase is split around another word.</p>
+<p>The solution we came up with is to duplicate the original word (ie., the <br />
+two 1&rsquo;s are separate entities), which would give you a tree like <code>(N 1 (R 3 2))</code></p>
+<p>For the purposes of identifying these numbers differently, we would uniquely <br />
+number the 1&rsquo;s. So the new string would be &lsquo;1-1 2-3 3-2&rsquo;, and the corresponding<br />
+tree would be <code>(N 1 (R 3 2))</code> with no hassle.</p>
+<p>This seems strange, but it&rsquo;s actually a well known tactic in the<br />
+generative stories of IBM model 3. </p>
+<h3 id="vanishing-words-one-to-no-mapping"><a name="user-content-vanishing-words-one-to-no-mapping" href="#vanishing-words-one-to-no-mapping" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Vanishing words (one-to-no mapping)</h3>
+<p>Basically the string looks like &lsquo;1-1 3-2&rsquo; and 2 doesn&rsquo;t go anywhere. <br />
+The solution we came up with was to copy the previous word&rsquo;s alignment (i.e<br />
+fold the non-producing word left).</p>
+<p>This isn&rsquo;t the greatest way to do this (and I have some ideas<br />
+on how to improve the folding). In many languages (english included) it <br />
+actually makes more sense to fold right (hindi is a good example - heads always<br />
+come after their modifiers. This is also true of english <br />
+(i.e, the red car -&gt; lal gadi, but you&rsquo;d want to fold &lsquo;the&rsquo; right so that<br />
+it grammatically comes under the clause it&rsquo;s actually part of)). It really <br />
+depends on which word is being left out of the mix.</p>
+<p>In our current solution, you&rsquo;d get a new alignment string like &lsquo;1-1 2-1 3-2&rsquo;.</p>
+<p>An issue is that the parse tree gets an<br />
+extra terminal for 2 that didn&rsquo;t exist in the original alignment. </p>
+<p>We actually don&rsquo;t create a new terminal for this reason, and just renumber<br />
+the old terminals. So we get &lsquo;1-1 2-3&rsquo; -&gt; &lsquo;1-1 2-2&rsquo; (and we pretend that<br />
+word #2 doesn&rsquo;t exist.)</p>
+<p>This is actually a bad idea, since it removes information about null alignments.<br />
+It would be helpful to know that, for example &lsquo;[a|an|the] noun -&gt; noun&rsquo; in hindi<br />
+in almost all cases (hindi doesn&rsquo;t have articles)</p>
+<h3 id="many-to-one-mappings"><a name="user-content-many-to-one-mappings" href="#many-to-one-mappings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Many to one mappings</h3>
+<p>This is the opposite of one-to-many. </p>
+<p>In this case, we duplicate the terminal in the target languge, and get<br />
+&lsquo;1-1 2-1 3-2&rsquo; -&gt; &lsquo;1-1 2-2 3-3&rsquo; and it parses to <code>(N 1 (N 2 3))</code>.</p>
+<h3 id="materializing-words"><a name="user-content-materializing-words" href="#materializing-words" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Materializing words</h3>
+<p>This is the target side version of the vanishing words.<br />
+Again, we just fold the non-aligned words into the previous terminal.</p>
+<p>Again, this is problematic, because you may want to fold right in many <br />
+languages. </p>
+<p>So &lsquo;1-1 2-3&rsquo; would become &lsquo;1-1 1-2 2-3&rsquo; which would become &lsquo;1-1 2-2 3-3&rsquo; <br />
+per previous rules. We end up with <code>(N 1 (N 2 3))</code>.</p>
+<h3 id="higher-order-operations"><a name="user-content-higher-order-operations" href="#higher-order-operations" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Higher order operations.</h3>
+<p>Try parsing &lsquo;2 4 1 3&rsquo; with only N and R operations. <br />
+You can&rsquo;t.</p>
+<p>The solution to this is to allow higher order operations where needed.<br />
+They tend to be rare (&lsquo;2413&rsquo; and &lsquo;3142&rsquo; are the only two length-4 ones,<br />
+there are 6 length-5, and 46 length-6 ones). If you&rsquo;re curious, this corresponds<br />
+to the sequence A111111 in the integer sequences dictionary, and it actually<br />
+has a very beautiful mathematical interpretation as A(n) = # of simple permutations<br />
+of length n. This makes a whole lot of sense, since one would have to consider<br />
+the entire sequence&rsquo;s permutation to reverse it back to the original order.</p>
+<p>The next few numbers in the sequence are 338 and 2926. It&rsquo;s really hard to <br />
+imagine that our minds are dealing with 2926 different permutations of things<br />
+when we construct sentences, rather than dealing with 46. I&rsquo;ve cut off the <br />
+operations at order 6, and anything larger, I&rsquo;m attributing to a faulty <br />
+alignment, or there&rsquo;s something bizarre going on. </p>
+<h3 id="phrase-translations"><a name="user-content-phrase-translations" href="#phrase-translations" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>phrase translations.</h3>
+<p>Unfortunately, there are lot of shortcuts taken in the data, and one of them<br />
+are wholesale phrase translations. There are a lot that aren&rsquo;t what I&rsquo;d call<br />
+&ldquo;minimal&rdquo;, and they tend to contain more words than they need to.<br />
+<a href="http://ling-itgp.herokuapp.com/fr/19">Here&rsquo;s</a> a good example, if you look<br />
+at the end of the sentence. It&rsquo;s non minimal because there are a lot of direct<br />
+translations you could map out of that set, and because &lsquo;in&rsquo; is mapped to <br />
+two separate phrases next to each other. This is a super bizarre example, and<br />
+I wasn&rsquo;t able to parse this alignment. I&rsquo;d say whoever made it was a little<br />
+confused, but I don&rsquo;t speak french so it&rsquo;s hard for me to verify.</p>
+<p>This normally looks like &lsquo;1-1 1-2 1-3 2-1 2-2 2-3&rsquo;. Basically a series of<br />
+two words in the source maps to a series of three words in the translation.</p>
+<p>The way that I&rsquo;m dealing with this is to collapse the phrases on both sides<br />
+to a single terminal. So we get &lsquo;1-1&rsquo; only in this case, since it&rsquo;s one <br />
+phrase to one phrase. </p>
+<h2 id="now-what"><a name="user-content-now-what" href="#now-what" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Now what?</h2>
+<p>So we have the trees, and we can parse alignments. </p>
+<p>There are a couple problems that are of interest here. </p>
+<p>The first is language detection. This isn&rsquo;t really helpful in the sense of<br />
+solving language detection itself, since you need an alignment (and<br />
+presumably if you&rsquo;re generating that, you already know what language you&rsquo;re<br />
+dealing with), but being able to identify which language is being translated<br />
+would be a good sanity check against the known linguistic phylogenic tree <br />
+(i.e, languages far apart should be easy to tell apart, and languages close<br />
+together would be harder to tell apart). <br />
+It could also be useful to do language detection as a sort of sanity check - <br />
+if you are attempting to do an alignment and the language detection thinks<br />
+you&rsquo;re in another language altogether, then there&rsquo;s a very, very low probability<br />
+that your alignment is correct. This could, for example, be an indicator <br />
+feature in Phrasal (ie.: alignment matches translation pair?)</p>
+<p>The second is looking at translation itself. We could either try improving <br />
+phrase-based translation by giving the probability that some sequence of tokens<br />
+aligns the way that it does, or we could go or tree-based alignment models, <br />
+which generate a set of grammar rules that are used to parse/generate a sentence.</p>
+<h2 id="future-directionstodos"><a name="user-content-future-directionstodos" href="#future-directionstodos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Future Directions/TODOS</h2>
+<h3 id="code-fixups"><a name="user-content-code-fixups" href="#code-fixups" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Code fixups</h3>
+<p>We really need to fixup the code so that there isn&rsquo;t so much duplication, and<br />
+get ourselves into a standard toolset. There&rsquo;s a lot of copy-pasting I did <br />
+to try and keep things as small scripts, which we can remove.</p>
+<h3 id="adding-pos-tags-or-raw-terminals-themselves"><a name="user-content-adding-pos-tags-or-raw-terminals-themselves" href="#adding-pos-tags-or-raw-terminals-themselves" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Adding POS tags, or raw terminals themselves.</h3>
+<p>Moses&rsquo; tree based algorithms use the actual words themselves when trying to <br />
+generate rules. That could be a bit much considering our corpora sizes (we<br />
+either need to run an aligner, generate alignments, use those alignments to <br />
+bootstrap our model, or stick to the test sets of standard alignment problems<br />
+as the data for our problem).</p>
+<p>A good intermediate would be POS tags. Simply looking at the subtrees with<br />
+no distinguishing terminals seems rather weak. The only feature you get there<br />
+is the number of terminals, which doesn&rsquo;t seem like it would help very much. </p>
+<p>Here&rsquo;s what that looks like. To get this output, run <br />
+<code>treegeneration.py -l word-alignment-data/English-Hindi.test/english-hindi.alignment | subtrees | sort | uniq -c | sort -n</code><br />
+from the main directory.</p>
+<pre><code class="clojure">   2 (:N (:N (:N (:N (:N (:N (:N (:N * *) *) *) *) *) *) *) *)
+   2 (:N (:N (:N (:N (:N (:N (:N * *) *) *) *) *) *) *)
+   2 (:N (:N (:N * *) *) (:R (:R (:R * *) *) (:N (:N * *) *)))
+   2 (:N (:N (:R (:N * *) *) *) *)
+   2 (:N (:R (:N * *) *) *)
+   2 (:N (:R * *) *)
+   2 (:N * (:R (:N * *) (:N * *)))
+   2 (:N * (:R (:R (:R * *) *) *))
+   2 (:R (:N (:N (:N * *) *) *) (:N * *))
+   2 (:R (:N (:N * *) *) (:N * *))
+   2 (:R (:R (:N (:N * *) *) *) (:N * *))
+   2 (:R (:R (:N * *) (:N (:N * *) *)) *)
+   2 (:R (:R (:R * *) *) (:N (:N * *) *))
+   2 (:R (:R * (:N * *)) (:N (:N * *) *))
+   2 (:R (:R * (:N * *)) *)
+   2 (:R * (:N (:N (:N * *) *) *))
+   3 (:N (:N * *) (:R (:N * *) *))
+   3 (:N * (:R * (:N (:N * *) *)))
+   3 (:R (:N (:N * *) *) (:N (:N * *) *))
+   3 (:R (:N * *) (:N (:N (:N * *) *) *))
+   3 (:R (:R (:N * *) (:N * *)) (:N * *))
+   3 (:R (:R * (:N (:N * *) *)) *)
+   3 (:R (:R * *) (:N * *))
+   4 (:R (:N (:N (:N * *) *) *) *)
+   4 (:R (:R (:N * *) *) (:N * *))
+   5 (:R (:R (:N (:N * *) *) *) *)
+   6 (:R (:R (:R * *) *) *)
+   7 (:N (:N (:N (:N (:N (:N * *) *) *) *) *) *)
+   7 (:R (:N * *) (:N (:N * *) *))
+   9 (:R (:R (:N * *) *) *)
+   9 (:R (:R * *) *)
+  11 (:N (:N (:N (:N (:N * *) *) *) *) *)
+  11 (:R (:N (:N * *) *) *)
+  11 (:R * (:N (:N * *) *))
+  12 (:R * (:N * *))
+  14 (:R (:N * *) (:N * *))
+  20 (:N (:N (:N (:N * *) *) *) *)
+  24 (:R * *)
+  26 (:R (:N * *) *)
+  43 (:N (:N (:N * *) *) *)
+ 123 (:N (:N * *) *)
+ 269 (:N * *)
+</code></pre>
+
+<p>This is the English-Hindi test data, which has 90 examples, and is really<br />
+not large enough to have anything much specific. Even then, this isn&rsquo;t very<br />
+interesting to look at, and I doubt that this means much without some more<br />
+interesting terminal descriptions than &ldquo;we don&rsquo;t care what&rsquo;s here&rdquo;.</p>
+<h2 id="data"><a name="user-content-data" href="#data" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Data</h2>
+<p>Languages:<br />
+<em> <a href="http://www.statmt.org/europarl/">Europe</a><br />
+    * German<br />
+    * Spanish <br />
+    * French</em> South Asia<br />
+    * <a href="http://ufallab.ms.mff.cuni.cz/~bojar/hindencorp/">Hindi</a><br />
+<em> Arabic (need to clean/prepare)<br />
+</em> East Asia<br />
+    * <a href="http://phontron.com/japanese-translation-data.php">Japanese</a><br />
+    * Mandarin<br />
+* Africa<br />
+    * <a href="https://www.ru.ac.za/englishlanguageandlinguistics/research/pastresearchprojects/xhosaenglishcorpus/">Xhosa</a> (need to email)</p>
+<h2 id="features"><a name="user-content-features" href="#features" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Features</h2>
+<ul>
+<li>Basics<ul>
+<li>length of the sentence<ul>
+<li>(highest value terminal in the tree)</li>
+</ul>
+</li>
+<li>number of nodes in the tree <code>done</code></li>
+<li>number of each operation<ul>
+<li>N, R, 4one etc</li>
+</ul>
+</li>
+<li>depth <code>done</code></li>
+</ul>
+</li>
+<li>Positionality<ul>
+<li>max/min height of each operation (not N)</li>
+<li>mean height of each operation (not N)<ul>
+<li>height of each &lsquo;R&rsquo; subtree and take average</li>
+</ul>
+</li>
+<li>mean height of tree<ul>
+<li>height from each leaf averaged</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Ranges</p>
+<ul>
+<li>max range of operation<ul>
+<li>how many nodes does the operation span </li>
+</ul>
+</li>
+<li>mean range of operation<ul>
+<li>mean # of nodes the operation spans (so R(1,3) spans 2, etc) </li>
+</ul>
+</li>
+<li>max children of a node for each operation type in flattened tree<ul>
+<li>this is slightly different from above since it doesn&rsquo;t include sections where another operation is working.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Transformations</p>
+<ul>
+<li>flatten</li>
+<li>subtrees</li>
+<li>non N subtrees</li>
+</ul>
+</li>
+</ul>
+<h3 id="depth"><a name="user-content-depth" href="#depth" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Depth</h3>
+<p>One interesting feature that I came up with is called depth. If you want to<br />
+compute depth for each tree, just run <code>... | flatten | awk 'BEGIN{FS="("} {print NF}'</code> where &hellip; is whatever generates the trees. </p>
+<p>Depth tells you how &ldquo;complex&rdquo; the alignment tree is. For something like french,<br />
+the flattened tree generally has depth 1 (meaning there&rsquo;s just one :N and <br />
+everything is already in the order that it needs to be.), at all lengths.</p>
+<p>For something like Hindi, the depth is higher, on the order of 4 deep/word <br />
+when the sentence is longer than 5 terminals. </p>
+<p>Normalizing by the length of the sentence gives you a pretty stable metric to <br />
+determine which language you&rsquo;re dealing with (of course, you could just<br />
+include both depth and length as features and fit in 2-D space).</p>
+<p>Here&rsquo;s what d/L looks like:</p>
+<p><img src="/Users/avi/repos/classes/cs221/alignment-tree/docs/depths.png" style="width:100%;"/><br />
+green is swedish, blue is french, and red is hindi. </p>
+<p>We&rsquo;re already seeing some nice differences! The spikes at 0 come from very short<br />
+examples, most of which are just phrases that translate directly anyway.</p></article></body></html>
