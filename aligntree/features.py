@@ -62,8 +62,8 @@ def flatten(sexp):
 
   # if both heads are the same then gut the children.
   children = list(map(flatten, sexp[1:]))
-  heads = set(t.pluck(0, filter(lambda x: isinstance(x,list),children)))
-  heads.add(sexp[0])
+  heads = set(extract_op(x) for x in t.pluck(0, filter(lambda x: isinstance(x,list),children)))
+  heads.add(extract_op(sexp[0]))
   # number heads are fine, we just want to make sure that the
   # string type heads are all the same
   if len(heads) <= 1:
@@ -144,16 +144,16 @@ def min_height_tree_from_leaf(tree):
 
 
 features = [
-  (length.__name__, length),
-  (num_nodes.__name__, num_nodes),
-  (depth.__name__, depth),
+  ('length', length),
+  ('num_nodes', num_nodes),
+  ('depth', depth),
+  ('num_normal', op_counter(':N')),
+  ('num_reverse', op_counter(':R')),
   ('max_range_reverse', op_range(max, ':R')),
   ('min_range_reverse', op_range(min, ':R')),
   ('mean_range_reverse', op_range(mean, ':R')),
-  ('num_normal', op_counter(':N')),
-  ('num_reverse', op_counter(':R')),
-  (mean_height_from_leaf.__name__, mean_height_from_leaf),
-  (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf)
+  ('mean_height_from_leaf', mean_height_from_leaf),
+  ('min_height_tree_from_leaf', min_height_tree_from_leaf)
 ]
 
 # features += [(('num_' + op_type), op_counter(':' + op_type)) for op_type in op_types]
