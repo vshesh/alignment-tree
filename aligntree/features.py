@@ -3,8 +3,13 @@ from __future__ import print_function
 
 import sys
 import toolz as t
+import toolz.curried as tc
 import fileinput
 import getopt
+
+# -------------------------- MATH UTILITIES -----------------------------
+mean = lambda int_list: return sum(int_list)/float(len(int_list))
+
 
 # --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
@@ -39,11 +44,6 @@ def dumptree(tree):
     if not isinstance(tree, list): return str(tree)
     return '('+tree[0]+' '+ ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
-
-def mean(int_list):
-  #converts list into a mean
-  return sum(int_list)/float(len(int_list))
-
 # ------------------------ Transformations -----------------------------------
 
 def flatten(sexp):
@@ -63,6 +63,19 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
+def flatten_list(l):
+  for x in l:
+    if not isinstance(x, list): yield x
+    else:
+      for e in flatten_list(x):
+        yield e
+
+def group_by_op(tree):
+  return t.pipe(tree, 
+    flatten_list, 
+    tc.filter(lambda e: isinstance(e, str)),
+    tc.groupby(lambda e: e.split('^')[0]), 
+    dict)
 
 def height_list(tree):
   #return a list of all the heights in a tree from the leaf nodes
@@ -86,11 +99,19 @@ def num_nodes(tree):
   if not isinstance(tree, list): return 0
   return 1 + sum(num_nodes(c) for c in tree[1:])
 
+
+def op_range(func, op):
+  def helper(tree):
+    if not isinstance(tree, list): return 0
+    groups = group_by_op(tree)
+    return func((lambda e: int(e[1]) - int(e[0]))(i.split('^')[1].split('-')) for i in (groups[op] if op in groups else [':^0-0']))
+  return helper
+
   
 def op_counter(op):
   def num_ops(tree):
     if not isinstance(tree, list): return 0
-    return (1 if tree[0] == op else 0) + sum(num_ops(c) for c in tree[1:])
+    return (1 if tree[0].split('^')[0] == op else 0) + sum(num_ops(c) for c in tree[1:])
 
   return num_ops
 
@@ -101,6 +122,21 @@ def flatten_function(f):
     return f(flatten(tree))
   return flattened_featurizer
 
+op_types = ['N', 'R', '4one', '4two', 
+            '5one', '5two', '5three', 
+            '5four', '5five', '5six', 
+            '6n1', '6n2', '6n3', '6n4', 
+            '6n5', '6n6', '6n7', '6n8',
+            '6n9', '6n10', '6n11', '6n12', 
+            '6n13', '6n14', '6n15', '6n16', 
+            '6n17', '6n18', '6n19', '6n20', 
+            '6n21', '6n22', '6n23', '6n24', 
+            '6n25', '6n26', '6n27', '6n28', 
+            '6n29', '6n30', '6n31', '6n32', 
+            '6n33', '6n34', '6n35', '6n36', 
+            '6n37', '6n38', '6n39', '6n40', 
+            '6n41', '6n42', '6n43', '6n44', 
+            '6n45', '6n46']
 
 def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
@@ -122,13 +158,18 @@ def max_operation_depth(op):
 features = [ 
   (length.__name__, length),
   (num_nodes.__name__, num_nodes),
-  (depth.__name__, depth), 
+  (depth.__name__, depth),
+  ('max_range_reverse', op_range(max, ':R')),
+  ('min_range_reverse', op_range(min, ':R')),
+  ('mean_range_reverse', op_range(mean, ':R')),
   ('num_normal', op_counter(':N')), 
   ('num_reverse', op_counter(':R')),
   (mean_height_from_leaf.__name__, mean_height_from_leaf),
   (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf),
   ('reverse_max_depth', max_operation_depth(':R'))
 ]
+
+# features += [(('num_' + op_type), op_counter(':' + op_type)) for op_type in op_types]
 
 # Flatten featurizers and add them
 features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]

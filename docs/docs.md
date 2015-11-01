@@ -286,13 +286,7 @@ phrase-based translation by giving the probability that some sequence of tokens
 aligns the way that it does, or we could go or tree-based alignment models, 
 which generate a set of grammar rules that are used to parse/generate a sentence.
 
-## Future Directions/TODOS
-
-### Code fixups
-
-We really need to fixup the code so that there isn't so much duplication, and
-get ourselves into a standard toolset. There's a lot of copy-pasting I did 
-to try and keep things as small scripts, which we can remove.
+## Future Directions
 
 ### Adding POS tags, or raw terminals themselves.
 
@@ -359,6 +353,14 @@ This is the English-Hindi test data, which has 90 examples, and is really
 not large enough to have anything much specific. Even then, this isn't very
 interesting to look at, and I doubt that this means much without some more
 interesting terminal descriptions than "we don't care what's here".
+
+### Grammar Style Language Model
+
+Right now, we've turned the issue of tree validity into a machine-learning
+problem by extracting numerical features and trying to fit some kind of 
+classifier to the space. 
+
+However, the 
 
 ## Data
 
