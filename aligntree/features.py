@@ -112,11 +112,11 @@ def min_height_tree_from_leaf(tree):
   return min(height_list(tree))
 
 
-# def max_operation_depth(op):
-#   def ops_depth(tree):
-#     if not isinstance(tree, list): return 0
-
-#     return max( 1 + ops_depth(c) for c in tree[1:] if c[0])
+def max_operation_depth(op):
+  def ops_depth(tree):
+    if not isinstance(tree, list): return 0
+    return max(1 + depth(c) if c[0] == op else 0 + ops_depth(c) for c in tree[1:])
+  return ops_depth
 
 
 features = [ 
@@ -126,7 +126,8 @@ features = [
   ('num_normal', op_counter(':N')), 
   ('num_reverse', op_counter(':R')),
   (mean_height_from_leaf.__name__, mean_height_from_leaf),
-  (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf)
+  (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf),
+  ('reverse_max_depth', max_operation_depth(':R'))
 ]
 
 # Flatten featurizers and add them
