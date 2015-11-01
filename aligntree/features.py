@@ -39,6 +39,11 @@ def dumptree(tree):
     if not isinstance(tree, list): return str(tree)
     return '('+tree[0]+' '+ ' '.join(dumptree(child) for child in tree[1:]) + ')'
 
+
+def mean(int_list):
+  #converts list into a mean
+  return sum(int_list)/float(len(int_list))
+
 # ------------------------ Transformations -----------------------------------
 
 def flatten(sexp):
@@ -57,6 +62,13 @@ def flatten(sexp):
                                          for x in children)))
 
   return [sexp[0]]+children
+
+
+def height_list(tree):
+  #return a list of all the heights in a tree from the leaf nodes
+  if not isinstance(tree, list): return [0]
+  return [x+1 for x in t.concat(height_list(c) for c in tree[1:])]
+
 
 # ----------------------- Features -------------------------------------------
 
@@ -90,14 +102,34 @@ def flatten_function(f):
   return flattened_featurizer
 
 
+def mean_height_from_leaf(tree):
+  if not isinstance(tree, list): return 0
+  return mean(height_list(tree))
+
+
+def min_height_tree_from_leaf(tree):
+  if not isinstance(tree, list): return 0
+  return min(height_list(tree))
+
+
+# def max_operation_depth(op):
+#   def ops_depth(tree):
+#     if not isinstance(tree, list): return 0
+
+#     return max( 1 + ops_depth(c) for c in tree[1:] if c[0])
+
+
 features = [ 
   (length.__name__, length),
   (num_nodes.__name__, num_nodes),
   (depth.__name__, depth), 
   ('num_normal', op_counter(':N')), 
-  ('num_reverse', op_counter(':R'))
+  ('num_reverse', op_counter(':R')),
+  (mean_height_from_leaf.__name__, mean_height_from_leaf),
+  (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf)
 ]
 
+# Flatten featurizers and add them
 features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
 
 
@@ -114,6 +146,5 @@ if __name__ == '__main__':
   
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print(tree)
     print( (language or '') + ','.join(
       str(f[1](tree)) for f in features))
