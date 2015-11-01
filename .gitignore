@@ -33,6 +33,8 @@ node_modules
 *.exe
 *.o
 *.so
+*.pyc
+*.pyo
 
 # Packages #
 ############
