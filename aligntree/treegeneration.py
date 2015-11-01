@@ -241,7 +241,7 @@ def printtree(stack):
 def lisppreorder(tree):
     if (tree == None): return
     if tree.order == 'T': return str(tree.start)
-    return '(:'+tree.order + ' ' + ' '.join(lisppreorder(child) for child in tree.children) + ')'
+    return '(:'+tree.order + '^' + str(tree.start) + '-' + str(tree.end) + ' ' + ' '.join(lisppreorder(child) for child in tree.children) + ')'
 
 def lisptree(stack):
     s = ''
