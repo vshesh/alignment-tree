@@ -151,7 +151,9 @@ def min_height_tree_from_leaf(tree):
 def max_operation_depth(op):
   def ops_depth(tree):
     if not isinstance(tree, list): return 0
-    return max(1 + depth(c) if c[0] == op else 0 + ops_depth(c) for c in tree[1:])
+    if tree[0] == op:
+      return depth(tree)
+    return max( ops_depth(c) for c in tree[1:])
   return ops_depth
 
 
