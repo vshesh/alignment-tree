@@ -1,11 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="generator" content="pandoc" />
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
@@ -43,116 +46,33 @@ code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Ann
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
   </style>
-  <style>
-  body {
-    font-family: "Avenir Next", Helvetica, Arial, sans-serif;
-    padding:1em;
-    margin:auto;
-    max-width:42em;
-    background:#fefefe;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-  }
-  
-  h1 {
-    color: #000000;
-    font-size: 28pt;
-  }
-  
-  h2 {
-    border-bottom: 1px solid #CCCCCC;
-    color: #000000;
-    font-size: 24px;
-  }
-  
-  h3 {
-    font-size: 18px;
-  }
-  
-  h4 {
-    font-size: 16px;
-  }
-  
-  h5 {
-    font-size: 14px;
-  }
-  
-  h6 {
-    color: #777777;
-    background-color: inherit;
-    font-size: 14px;
-  }
-  
-  hr {
-    height: 0.2em;
-    border: 0;
-    color: #CCCCCC;
-    background-color: #CCCCCC;
-  }
-  
-  p, blockquote, ul, ol, dl, li, table, pre {
-    margin: 15px 0;
-  }
-  
-  a, a:visited {
-    color: #4183C4;
-    background-color: inherit;
-    text-decoration: none;
-  }
-  
-  #message {
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    display:block;
-    width:100%;
-    height:60px;
-    margin:6px 0px;
-  }
-  
-  button, #ws {
-    font-size: 10pt;
-    padding: 4px 6px;
-    border-radius: 5px;
-    border: 1px solid #bbb;
-    background-color: #eee;
-  }
-  
-  code, pre, #ws, #message {
-    font-family: Monaco;
-    font-size: 10pt;
-    border-radius: 3px;
-    background-color: #F8F8F8;
-    color: inherit;
-  }
-  
-  code {
-    border: 1px solid #EAEAEA;
-    margin: 0 2px;
-    padding: 0 5px;
-  }
-  
-  pre {
-    border: 1px solid #CCCCCC;
-    overflow: auto;
-    padding: 4px 8px;
-  }
-  
-  pre > code {
-    border: 0;
-    margin: 0;
-    padding: 0;
-  }
-  
-  #ws { background-color: #f8f8f8; }
-  
-  .send { color:#77bb77; }
-  .server { color:#7799bb; }
-  .error { color:#AA0000; }
-  </style>
 </head>
 <body>
+<nav id="TOC">
+<ul>
+<li><a href="#alignment-trees">Alignment Trees</a><ul>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#how-to">How To</a></li>
+<li><a href="#inconsistencies">Inconsistencies</a><ul>
+<li><a href="#one-to-many-mapping">One-to-many mapping</a></li>
+<li><a href="#vanishing-words-one-to-no-mapping">Vanishing words (one-to-no mapping)</a></li>
+<li><a href="#many-to-one-mappings">Many to one mappings</a></li>
+<li><a href="#materializing-words">Materializing words</a></li>
+<li><a href="#higher-order-operations.">Higher order operations.</a></li>
+<li><a href="#phrase-translations.">phrase translations.</a></li>
+</ul></li>
+<li><a href="#now-what">Now what?</a></li>
+<li><a href="#future-directions">Future Directions</a><ul>
+<li><a href="#adding-pos-tags-or-raw-terminals-themselves.">Adding POS tags, or raw terminals themselves.</a></li>
+<li><a href="#grammar-style-language-model">Grammar Style Language Model</a></li>
+</ul></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#features">Features</a><ul>
+<li><a href="#depth">Depth</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
 <h1 id="alignment-trees">Alignment Trees</h1>
 <p>Vishesh Gupta</p>
 <h2 id="motivation">Motivation</h2>
@@ -163,7 +83,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In that case, it should be possible to map one grammar tree to another grammar tree (or the corresponding subtrees) and learn when those trees are similar or different. This is generally called tree-based translation, and there are many algorithms for it on the <a href="http://www.statmt.org/moses/?n=Moses.SyntaxTutorial#ntoc1">moses tree-based translation page</a></p>
 <p>DeKai Wu et all concieved of a tree of operations that map the order of the source language to that of the target language. His intuition was that these mappings could be produced by simply reordering each pair of words, with two operations - N and R, where N preserves order and R reverses the order.</p>
 <p>As an example, consider an alignment problem with the sentences &quot;I went home&quot; and &quot;Mein ghar gaya&quot; (phoneticized Hindi, translated to I home went).</p>
-<p>Now, the appropriate tree here would be (N I (R went home)) to transform the original ordering of the words to the new ordering in hindi.</p>
+<p>Now, the appropriate tree here would be <code>(N I (R went home))</code> to transform the original ordering of the words to the new ordering in hindi.</p>
 <p>There are still issues with this approach, such as spurious words, and phrase alignments among other problems, and I will discuss how we dealt with those.</p>
 <h2 id="how-to">How To</h2>
 <p>Alignment trees are made by taking a parallel alignment problem such as</p>
@@ -268,9 +188,7 @@ alignment: 1-0 2-24 2-25 3-24 3-25 4-9 4-10 5-3 5-4 5-5 6-3 6-4 6-5 7-6 7-7 7-8 
 <p>There are a couple problems that are of interest here.</p>
 <p>The first is language detection. This isn't really helpful in the sense of solving language detection itself, since you need an alignment (and presumably if you're generating that, you already know what language you're dealing with), but being able to identify which language is being translated would be a good sanity check against the known linguistic phylogenic tree (i.e, languages far apart should be easy to tell apart, and languages close together would be harder to tell apart). It could also be useful to do language detection as a sort of sanity check - if you are attempting to do an alignment and the language detection thinks you're in another language altogether, then there's a very, very low probability that your alignment is correct. This could, for example, be an indicator feature in Phrasal (ie.: alignment matches translation pair?)</p>
 <p>The second is looking at translation itself. We could either try improving phrase-based translation by giving the probability that some sequence of tokens aligns the way that it does, or we could go or tree-based alignment models, which generate a set of grammar rules that are used to parse/generate a sentence.</p>
-<h2 id="future-directionstodos">Future Directions/TODOS</h2>
-<h3 id="code-fixups">Code fixups</h3>
-<p>We really need to fixup the code so that there isn't so much duplication, and get ourselves into a standard toolset. There's a lot of copy-pasting I did to try and keep things as small scripts, which we can remove.</p>
+<h2 id="future-directions">Future Directions</h2>
 <h3 id="adding-pos-tags-or-raw-terminals-themselves.">Adding POS tags, or raw terminals themselves.</h3>
 <p>Moses' tree based algorithms use the actual words themselves when trying to generate rules. That could be a bit much considering our corpora sizes (we either need to run an aligner, generate alignments, use those alignments to bootstrap our model, or stick to the test sets of standard alignment problems as the data for our problem).</p>
 <p>A good intermediate would be POS tags. Simply looking at the subtrees with no distinguishing terminals seems rather weak. The only feature you get there is the number of terminals, which doesn't seem like it would help very much.</p>
@@ -318,6 +236,60 @@ alignment: 1-0 2-24 2-25 3-24 3-25 4-9 4-10 5-3 5-4 5-5 6-3 6-4 6-5 7-6 7-7 7-8 
  <span class="dv">123</span> (<span class="kw">:N</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>) <span class="kw">*</span>)
  <span class="dv">269</span> (<span class="kw">:N</span> <span class="kw">*</span> <span class="kw">*</span>)</code></pre></div>
 <p>This is the English-Hindi test data, which has 90 examples, and is really not large enough to have anything much specific. Even then, this isn't very interesting to look at, and I doubt that this means much without some more interesting terminal descriptions than &quot;we don't care what's here&quot;.</p>
+<h3 id="grammar-style-language-model">Grammar Style Language Model</h3>
+<p>Right now, we've turned the issue of tree validity into a machine-learning problem by extracting numerical features and trying to fit some kind of classifier to the space.</p>
+<p>However, the</p>
+<h2 id="data">Data</h2>
+<p>Languages: * <a href="http://www.statmt.org/europarl/">Europe</a> * German * Spanish * French * South Asia * <a href="http://ufallab.ms.mff.cuni.cz/~bojar/hindencorp/">Hindi</a> * Arabic (need to clean/prepare) * East Asia * <a href="http://phontron.com/japanese-translation-data.php">Japanese</a> * Mandarin * Africa * <a href="https://www.ru.ac.za/englishlanguageandlinguistics/research/pastresearchprojects/xhosaenglishcorpus/">Xhosa</a> (need to email)</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Basics
+<ul>
+<li>length of the sentence
+<ul>
+<li>(highest value terminal in the tree)</li>
+</ul></li>
+<li>number of nodes in the tree <code>done</code></li>
+<li>number of each operation
+<ul>
+<li>N, R, 4one etc</li>
+</ul></li>
+<li>depth <code>done</code></li>
+</ul></li>
+<li>Positionality
+<ul>
+<li>max/min height of each operation (not N)</li>
+<li>mean height of each operation (not N)
+<ul>
+<li>height of each 'R' subtree and take average</li>
+</ul></li>
+<li>mean height of tree
+<ul>
+<li>height from each leaf averaged</li>
+</ul></li>
+</ul></li>
+<li>Ranges
+<ul>
+<li>max range of operation
+<ul>
+<li>how many nodes does the operation span</li>
+</ul></li>
+<li>mean range of operation
+<ul>
+<li>mean # of nodes the operation spans (so R(1,3) spans 2, etc)</li>
+</ul></li>
+<li>max children of a node for each operation type in flattened tree
+<ul>
+<li>this is slightly different from above since it doesn't include sections where another operation is working.</li>
+</ul></li>
+</ul></li>
+<li>Transformations
+<ul>
+<li>flatten</li>
+<li>subtrees</li>
+<li>non N subtrees</li>
+</ul></li>
+</ul>
 <h3 id="depth">Depth</h3>
 <p>One interesting feature that I came up with is called depth. If you want to compute depth for each tree, just run <code>... | flatten | awk 'BEGIN{FS=&quot;(&quot;} {print NF}'</code> where ... is whatever generates the trees.</p>
 <p>Depth tells you how &quot;complex&quot; the alignment tree is. For something like french, the flattened tree generally has depth 1 (meaning there's just one :N and everything is already in the order that it needs to be.), at all lengths.</p>
