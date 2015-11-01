@@ -146,9 +146,18 @@ def min_height_tree_from_leaf(tree):
 def max_operation_depth(op):
   def ops_depth(tree):
     if not isinstance(tree, list): return 0
-    if tree[0] == op:
+    if extract_op(tree[0]) == op:
       return depth(tree)
     return max( ops_depth(c) for c in tree[1:])
+  return ops_depth
+
+
+def min_operation_depth(op):
+  def ops_depth(tree):
+    if not isinstance(tree, list): return 0
+    if extract_op(tree[0])  == op:
+      return depth(tree)
+    return min( ops_depth(c) for c in tree[1:])
   return ops_depth
 
 
@@ -163,7 +172,8 @@ features = [
   ('num_reverse', op_counter(':R')),
   (mean_height_from_leaf.__name__, mean_height_from_leaf),
   (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf),
-  ('reverse_max_depth', max_operation_depth(':R'))
+  ('reverse_max_depth', max_operation_depth(':R')),
+  ('reverse_min_depth', min_operation_depth(':R'))
 ]
 
 # features += [(('num_' + op_type), op_counter(':' + op_type)) for op_type in op_types]
