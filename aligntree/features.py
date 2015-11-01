@@ -143,6 +143,15 @@ def min_height_tree_from_leaf(tree):
   return min(height_list(tree))
 
 
+def max_operation_depth(op):
+  def ops_depth(tree):
+    if not isinstance(tree, list): return 0
+    if tree[0] == op:
+      return depth(tree)
+    return max( ops_depth(c) for c in tree[1:])
+  return ops_depth
+
+
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -155,8 +164,6 @@ features = [
   ('mean_height_from_leaf', mean_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf)
 ]
-
-# features += [(('num_' + op_type), op_counter(':' + op_type)) for op_type in op_types]
 
 # Flatten featurizers and add them
 features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
