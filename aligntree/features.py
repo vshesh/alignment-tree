@@ -7,6 +7,10 @@ import toolz.curried as tc
 import fileinput
 import getopt
 
+# -------------------------- MATH UTILITIES -----------------------------
+mean = lambda int_list: return sum(int_list)/float(len(int_list))
+
+
 # --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
 #>>> parse_sexp("(+ 5 (+ 3 5))")
@@ -39,11 +43,6 @@ def dumptree(tree):
     if (tree == None): return ''
     if not isinstance(tree, list): return str(tree)
     return '('+tree[0]+' '+ ' '.join(dumptree(child) for child in tree[1:]) + ')'
-
-
-def mean(int_list):
-  #converts list into a mean
-  return sum(int_list)/float(len(int_list))
 
 # ------------------------ Transformations -----------------------------------
 
@@ -108,11 +107,6 @@ def op_range(func, op):
     return func((lambda e: int(e[1]) - int(e[0]))(i.split('^')[1].split('-')) for i in (groups[op] if op in groups else [':^0-0']))
   return helper
 
-
-def mean_range(tree):
-  if not isinstance(tree, list): return 0
-
-
   
 def op_counter(op):
   def num_ops(tree):
@@ -167,6 +161,7 @@ features = [
   (depth.__name__, depth),
   ('max_range_reverse', op_range(max, ':R')),
   ('min_range_reverse', op_range(min, ':R')),
+  ('mean_range_reverse', op_range(mean, ':R')),
   ('num_normal', op_counter(':N')), 
   ('num_reverse', op_counter(':R')),
   (mean_height_from_leaf.__name__, mean_height_from_leaf),
