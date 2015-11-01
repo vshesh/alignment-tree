@@ -7,9 +7,18 @@ import toolz.curried as tc
 import fileinput
 import getopt
 
-# -------------------------- MATH UTILITIES -----------------------------
-mean = lambda int_list: return sum(int_list)/float(len(int_list))
+# -------------------------- GENERAL UTILITIES -----------------------------
+def mean(l):
+  t = 0
+  c = 0
+  for e in l:
+    c+= 1
+    t += e
+  return float(t)/c
 
+extract_op = lambda s: s.split('^')[0]
+extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
+extent = lambda r: r[1]-r[0]
 
 # --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
@@ -58,7 +67,7 @@ def flatten(sexp):
   # number heads are fine, we just want to make sure that the
   # string type heads are all the same
   if len(heads) <= 1:
-    return list(t.cons(sexp[0], t.concat(x[1:] if isinstance(x,list) else [x] 
+    return list(t.cons(sexp[0], t.concat(x[1:] if isinstance(x,list) else [x]
                                          for x in children)))
 
   return [sexp[0]]+children
@@ -71,10 +80,10 @@ def flatten_list(l):
         yield e
 
 def group_by_op(tree):
-  return t.pipe(tree, 
-    flatten_list, 
+  return t.pipe(tree,
+    flatten_list,
     tc.filter(lambda e: isinstance(e, str)),
-    tc.groupby(lambda e: e.split('^')[0]), 
+    tc.groupby(lambda e: e.split('^')[0]),
     dict)
 
 def height_list(tree):
@@ -89,7 +98,7 @@ def length(tree):
   if not isinstance(tree, list): return tree
   return max(length(c) for c in tree[1:])
 
-  
+
 def depth(tree):
   if not isinstance(tree, list): return 0
   return 1 + max(depth(x) for x in tree[1:])
@@ -103,11 +112,12 @@ def num_nodes(tree):
 def op_range(func, op):
   def helper(tree):
     if not isinstance(tree, list): return 0
-    groups = group_by_op(tree)
-    return func((lambda e: int(e[1]) - int(e[0]))(i.split('^')[1].split('-')) for i in (groups[op] if op in groups else [':^0-0']))
+    return t.pipe(group_by_op(tree),
+                  lambda groups: groups[op] if op in groups else [':^0-0'],
+                  lambda x: func(extent(extract_range(i)) for i in x))
   return helper
 
-  
+
 def op_counter(op):
   def num_ops(tree):
     if not isinstance(tree, list): return 0
@@ -122,21 +132,6 @@ def flatten_function(f):
     return f(flatten(tree))
   return flattened_featurizer
 
-op_types = ['N', 'R', '4one', '4two', 
-            '5one', '5two', '5three', 
-            '5four', '5five', '5six', 
-            '6n1', '6n2', '6n3', '6n4', 
-            '6n5', '6n6', '6n7', '6n8',
-            '6n9', '6n10', '6n11', '6n12', 
-            '6n13', '6n14', '6n15', '6n16', 
-            '6n17', '6n18', '6n19', '6n20', 
-            '6n21', '6n22', '6n23', '6n24', 
-            '6n25', '6n26', '6n27', '6n28', 
-            '6n29', '6n30', '6n31', '6n32', 
-            '6n33', '6n34', '6n35', '6n36', 
-            '6n37', '6n38', '6n39', '6n40', 
-            '6n41', '6n42', '6n43', '6n44', 
-            '6n45', '6n46']
 
 def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
@@ -164,7 +159,7 @@ features = [
   ('max_range_reverse', op_range(max, ':R')),
   ('min_range_reverse', op_range(min, ':R')),
   ('mean_range_reverse', op_range(mean, ':R')),
-  ('num_normal', op_counter(':N')), 
+  ('num_normal', op_counter(':N')),
   ('num_reverse', op_counter(':R')),
   (mean_height_from_leaf.__name__, mean_height_from_leaf),
   (min_height_tree_from_leaf.__name__, min_height_tree_from_leaf),
@@ -184,10 +179,10 @@ if __name__ == '__main__':
   for o,a in opts:
     if o == '-l' or o == '--language':
       language = a + ','
-  
-  print(('language,' if language is not None else '') + 
+
+  print(('language,' if language is not None else '') +
         ','.join(x[0] for x in features))
-  
+
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
     print( (language or '') + ','.join(
