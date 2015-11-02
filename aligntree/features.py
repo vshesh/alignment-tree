@@ -72,6 +72,9 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
+flatten(parse_sexp('(:N^0-2 (:N^0-1 0 1) 2)')[0])
+
+
 def flatten_list(l):
   for x in l:
     if not isinstance(x, list): yield x
@@ -146,7 +149,7 @@ def min_height_tree_from_leaf(tree):
 def max_operation_depth(op):
   def ops_depth(tree):
     if not isinstance(tree, list): return 0
-    if tree[0] == op:
+    if extract_op(tree[0]) == op:
       return depth(tree)
     return max( ops_depth(c) for c in tree[1:])
   return ops_depth
@@ -162,8 +165,10 @@ features = [
   ('min_range_reverse', op_range(min, ':R')),
   ('mean_range_reverse', op_range(mean, ':R')),
   ('mean_height_from_leaf', mean_height_from_leaf),
-  ('min_height_tree_from_leaf', min_height_tree_from_leaf)
+  ('min_height_tree_from_leaf', min_height_tree_from_leaf),
+  ('max_depth_reverse', max_operation_depth(':R'))
 ]
+
 
 # Flatten featurizers and add them
 features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
