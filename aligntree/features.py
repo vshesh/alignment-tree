@@ -155,6 +155,16 @@ def max_operation_depth(op):
   return ops_depth
 
 
+
+def min_operation_depth(op):
+  def ops_depth(tree):
+    if not isinstance(tree, list): return 0
+    if extract_op(tree[0])  == op:
+      return depth(tree)
+    return min( ops_depth(c) for c in tree[1:])
+  return ops_depth
+
+
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -166,7 +176,7 @@ features = [
   ('mean_range_reverse', op_range(mean, ':R')),
   ('mean_height_from_leaf', mean_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf),
-  ('max_depth_reverse', max_operation_depth(':R'))
+  ('reverse_max_depth', max_operation_depth(':R')),
 ]
 
 
