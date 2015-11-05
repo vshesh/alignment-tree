@@ -129,13 +129,6 @@ def op_counter(op):
   return num_ops
 
 
-def flatten_function(f):
-  #returns a new form
-  def flattened_featurizer(tree):
-    return f(flatten(tree))
-  return flattened_featurizer
-
-
 def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
   return mean(height_list(tree))
@@ -153,7 +146,6 @@ def max_operation_depth(op):
       return depth(tree)
     return max( ops_depth(c) for c in tree[1:])
   return ops_depth
-
 
 
 def min_operation_depth(op):
@@ -181,7 +173,7 @@ features = [
 
 
 # Flatten featurizers and add them
-features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
+features += [('flattened_' + x[0], lambda e: x[1](flatten(e))) for x in features]
 
 
 if __name__ == '__main__':

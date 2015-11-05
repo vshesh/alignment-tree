@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cat $@ |
+sed 's/[^0-9 ,\-]//g' |
+pyp -p "' '.join(map(lambda x: '-'.join(x),list(itertools.chain(*(list(itertools.product(*(y.split(',') for y in e.split('-')))) for e in x.split(' '))))))" |
+pyp -p "' '.join(filter(lambda s: not (s.startswith('-') or s.endswith('-')), x.split(' ')))"

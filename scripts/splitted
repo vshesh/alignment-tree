@@ -1,0 +1,32 @@
+#!/bin/bash
+
+scriptdir=$(dirname $BASH_SOURCE)
+
+n=$(grep '</file>' $1 | uniq -c | cut -d' ' -f 1)
+dir=$(dirname $1)/$(basename -s .xml $1)
+
+echo $n
+echo $dir
+
+mkdir $dir
+csplit -n 4 -f $dir/$(basename -s .xml $1)_ $1 '/<\/file>/' {$(($n-1))}
+
+# remove the last file, which is usually just </file></xml>
+rm $dir/$(ls -1 $dir | tail -r | head -n 1)
+
+
+for f in $(find $dir/*[0-9]); do
+
+  # make a fully formatted xml file
+  # (the original files will have </file> on top.)
+  tail -n+2 $f > $dir/temp
+  echo '</file>' >> $dir/temp
+
+  # convert to a text file with id, sentence fragment.
+  # put that text file back in place of the original one.
+  $scriptdir/tedxml2txt $dir/temp > $f
+  echo $f
+done
+
+#remove temp files
+rm $dir/temp

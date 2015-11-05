@@ -5,6 +5,7 @@ from numpy import array
 import itertools
 from getopt import getopt
 import fileinput
+import json
 
 # data pertaining to the various kinds of operations. It's a double dictionary -
 # each order has a dictionary of a tuple containing and order and 
@@ -256,25 +257,21 @@ def lisptree(stack):
 
 def jsonPreorder(tree):
     if (tree == None): return
-    s = '{ "name":"' + str(tree)+'"'
+    s = { "name": str(tree)}
     if len(tree.children) > 0: 
-        s += ', "children": ['
-        for t in tree.children: s += jsonPreorder(t) + ','
-        s = s[:-1]+ ']'
-    return s + '}'
+        s['children'] = [jsonPreorder(t) for t in tree.children] 
+    return s
 
-def jsonTree(stack, alignment, linenum):
-    json = '{ "line_number":'+str(linenum)+', "original_alignment":"'+ alignment + '", '
+def jsonTree(stack, linenum, alignment, source, translation):
+    j = {"line_number": linenum, "original_alignment": alignment,
+            "english": source, "other": translation}
     if (len(stack) == 1):
-        json += '"success": "yes", '
-        json += '"parse_tree":' + jsonPreorder(stack[0]) + ' '
+        j["success"] = True
+        j["parse_tree"] = jsonPreorder(stack[0])
     else:
-        json += '"success": "no", '
-        json += '"parse_tree": [' 
-        for t in stack: json += jsonPreorder(stack[0]) + ', ' 
-        json = json[:-2]+']'
-    json += '}'
-    return json
+        j["success"] = False
+        j ['parse_tree'] = [jsonPreorder(t) for t in stack]  
+    return json.dumps(j)
 
 if __name__ == '__main__':
 
@@ -290,10 +287,15 @@ if __name__ == '__main__':
     if outformat is 'json': print '['
     count= 1
     for line in fileinput.input(args):
-        if(line.strip() == ""):
-            break
-        order = sanitize(sanitize2(line.split()))
+        if(line.strip() == ""): continue
+
+        source, translation, alignment = line.split('|||')
         
+        # can happen when alignment doesn't parse or 
+        # hand-aligned data has "rejected pairs"
+        if alignment.strip() == "": continue 
+        order = sanitize(sanitize2(alignment.strip().split(' ')))
+
         prevresult = []
         result = binaryparse(order)
 
@@ -303,14 +305,15 @@ if __name__ == '__main__':
                                  parseOrderK(result, 4),5),6))
 
         if outformat == 'json':
-            print jsonTree(result, line.strip(), count) + ','
+            print jsonTree(result, count, alignment.strip(), 
+                           source.strip(), translation.strip()) + ','
         elif outformat == 'lisp':
             print lisptree(result)
         else:
             printtree(result)
         count +=1 
 
-    if outformat is 'json': print ']'
+    if outformat is 'json': print '{}]'
     
 
 
