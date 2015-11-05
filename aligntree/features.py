@@ -81,6 +81,9 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
+flatten(parse_sexp('(:N^0-2 (:N^0-1 0 1) 2)')[0])
+
+
 def flatten_list(l):
   for x in l:
     if not isinstance(x, list): yield x
@@ -135,13 +138,6 @@ def op_counter(op):
   return num_ops
 
 
-def flatten_function(f):
-  #returns a new form
-  def flattened_featurizer(tree):
-    return f(flatten(tree))
-  return flattened_featurizer
-
-
 def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
   return mean(height_list(tree))
@@ -161,16 +157,6 @@ def max_operation_depth(op):
   return ops_depth
 
 
-
-# def min_operation_depth(op):
-#   def ops_depth(tree):
-#     if not isinstance(tree, list): return 0
-#     if extract_op(tree[0])  == op:
-#       return depth(tree)
-#     return min( ops_depth(c) for c in tree[1:])
-#   return ops_depth
-
-
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -183,11 +169,11 @@ features = [
   ('mean_height_from_leaf', mean_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf),
   ('reverse_max_depth', max_operation_depth(':R')),
-  # ('reverse_min_depth', min_operation_depth(':R'))
 ]
 
+
 # Flatten featurizers and add them
-features += [('flattened_' + i[0], flatten_function(i[1])) for i in features]
+features += [('flattened_' + x[0], lambda e: x[1](flatten(e))) for x in features]
 
 
 if __name__ == '__main__':
