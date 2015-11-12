@@ -14,29 +14,41 @@ def read_file_to_scipy_data(file_name, label):
 	labels = [label for a in data]
 	return (data, labels)
 
-arabic = read_file_to_scipy_data('./features/arabic-english-features-small.csv', 'arabic')
-german = read_file_to_scipy_data('./features/de-partial-small.output', 'german')
-french = read_file_to_scipy_data('./features/fr-partial-small.output', 'french')
-spanish = read_file_to_scipy_data('./features/es-partial-small.output', 'spanish')
+arabic = read_file_to_scipy_data('./features/arabic-english-features.csv', 'arabic')
+german = read_file_to_scipy_data('./features/de-partial.output', 'german')
+french = read_file_to_scipy_data('./features/fr-partial.output', 'french')
+spanish = read_file_to_scipy_data('./features/es-partial.output', 'spanish')
 
 all_data =  np.row_stack((arabic[0], german[0], french[0], spanish[0]))
 all_labels = arabic[1] + german[1] + french[1] + spanish[1]
 
+
+
 norm_data = Normalizer().fit_transform(all_data, all_labels)
 
 # clf = GMM(n_components=4, covariance_type='full')
+arabic_clf = GMM(n_components=4, covariance_type='full')
+german_clf = GMM(n_components=4, covariance_type='full')
+french_clf = GMM(n_components=4, covariance_type='full')
+spanish_clf = GMM(n_components=4, covariance_type='full')
 
-clf = svm.SVC()
+arabic_clf.fit(arabic[0])
+german_clf.fit(german[0])
+french_clf.fit(french[0])
+spanish_clf.fit(spanish[0])
 
-print 'fitting'
-clf.fit(all_data, all_labels)
+arabic_predictions = arabic_clf.predict(all_data)
+german_predictions = german_clf.predict(all_data)
+french_predictions = french_clf.predict(all_data)
+spanish_predictions = spanish_clf.predict(all_data)
 
-print 'predicting on training data'
-predictions = clf.predict(all_data)
+prediction_probs = zip(arabic_predictions, german_predictions, french_predictions, spanish_predictions)
+predictions = [max(enumerate(p), key=lambda x: x[1])[0] for p in prediction_probs]
+
+predition_labels = map(lambda x:{0:'arabic', 1:'german', 2:'french', 3:'spanish'}[x], predictions)
 
 
-
-print metrics.classification_report(predictions, all_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
+print metrics.classification_report(predition_labels, all_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
 
 # new_clf = SGDClassifier(n_iter=300, n_jobs=-1)
 
