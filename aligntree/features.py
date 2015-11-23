@@ -2,6 +2,7 @@
 from __future__ import print_function
 
 import sys
+import math
 import toolz as t
 import toolz.curried as tc
 import fileinput
@@ -15,6 +16,13 @@ def mean(l):
     c+= 1
     t += e
   return float(t)/c
+
+
+def std_dev(l):
+  avg = mean(l)
+  variance = map(lambda x: (x - avg)**2, l)
+  return math.sqrt(mean(variance))
+
 
 extract_op = lambda s: s.split('^')[0]
 extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
@@ -144,6 +152,10 @@ def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
   return mean(height_list(tree))
 
+def std_dev_height_from_leaf(tree):
+  if not isinstance(tree, list): return 0
+  return std_dev(height_list(tree))
+
 
 def min_height_tree_from_leaf(tree):
   if not isinstance(tree, list): return 0
@@ -168,7 +180,9 @@ features = [
   ('max_range_reverse', op_range(max, ':R')),
   ('min_range_reverse', op_range(min, ':R')),
   ('mean_range_reverse', op_range(mean, ':R')),
+  ('std_dev_range_reverse', op_range(std_dev, ':R')),
   ('mean_height_from_leaf', mean_height_from_leaf),
+  ('std_dev_height_from_leaf', std_dev_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf),
   ('reverse_max_depth', max_operation_depth(':R')),
 ]
