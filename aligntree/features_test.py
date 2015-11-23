@@ -21,4 +21,3 @@ def test_num_nodes():
   assert(f.num_nodes(smalltree) == f.length(smalltree))
   assert(f.num_nodes(mediumtree) == f.length(mediumtree))
 
-def test_num_
