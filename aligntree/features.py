@@ -55,13 +55,13 @@ def dumptree(tree):
 
 # ------------------------ Transformations -----------------------------------
 
-def flatten(sexp):
+def compress(sexp):
   if sexp is None: return None
   if not isinstance(sexp, list): return sexp
   if all(not isinstance(x, list) for x in sexp): return sexp
 
   # if both heads are the same then gut the children.
-  children = list(map(flatten, sexp[1:]))
+  children = list(map(compress, sexp[1:]))
   heads = set(extract_op(x) for x in t.pluck(0, filter(lambda x: isinstance(x,list),children)))
   heads.add(extract_op(sexp[0]))
   # number heads are fine, we just want to make sure that the
@@ -72,22 +72,22 @@ def flatten(sexp):
 
   return [sexp[0]]+children
 
-flatten(parse_sexp('(:N^0-2 (:N^0-1 0 1) 2)')[0])
 
-
-def flatten_list(l):
+def flatten(l):
   for x in l:
     if not isinstance(x, list): yield x
     else:
-      for e in flatten_list(x):
+      for e in flatten(x):
         yield e
+
 
 def group_by_op(tree):
   return t.pipe(tree,
-    flatten_list,
+    flatten,
     tc.filter(lambda e: isinstance(e, str)),
     tc.groupby(lambda e: e.split('^')[0]),
     dict)
+
 
 def height_list(tree):
   #return a list of all the heights in a tree from the leaf nodes
@@ -97,9 +97,14 @@ def height_list(tree):
 
 # ----------------------- Features -------------------------------------------
 
+# # this is a little more computationally intensive than we need.
+# def length(tree):
+#   if not isinstance(tree, list): return int(tree)
+#   return max(length(c) for c in tree[1:])
+
+# thanks to our new more complete output format.
 def length(tree):
-  if not isinstance(tree, list): return tree
-  return max(length(c) for c in tree[1:])
+  return int(tree[0].split('^')[1].split('-')[1])
 
 
 def depth(tree):
@@ -107,9 +112,13 @@ def depth(tree):
   return 1 + max(depth(x) for x in tree[1:])
 
 
+# note that num_nodes(original tree) = length(original tree)
+# this is only interesting for flattened trees.
 def num_nodes(tree):
-  if not isinstance(tree, list): return 0
-  return 1 + sum(num_nodes(c) for c in tree[1:])
+  return t.pipe(tree,
+                flatten,
+                tc.filter(lambda x: x.startswith(':')),
+                t.count)
 
 
 def op_range(func, op):
@@ -172,8 +181,9 @@ features = [
 ]
 
 
-# Flatten featurizers and add them
-features += [('flattened_' + x[0], lambda e: x[1](flatten(e))) for x in features]
+# add compressed versions of the features.
+features += [('compressed_' + x[0], t.compose(x[1], compress))
+             for x in features]
 
 
 if __name__ == '__main__':
@@ -185,7 +195,7 @@ if __name__ == '__main__':
       language = a + ','
 
   print(('language,' if language is not None else '') +
-        ','.join(x[0] for x in features))
+         ','.join(x[0] for x in features))
 
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]

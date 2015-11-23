@@ -22,6 +22,16 @@ if len(sys.argv) < 2:
 
 import mmap
 import re
+
+def clean(sentence):
+  s = sentence.replace('\n', ' ')
+  s = re.sub(r' "(\S)', r' " \1', s)
+  s = re.sub(r'(\S)" ', r'\1 " ', s)
+  s = re.sub(r'([;:?!])', r' \1', s)
+  s = re.sub(r'(\S), ', r'\1 , ', s)
+  s = '" ' + s[1:] if s[0] == '"' else s
+  return s
+
 # Here it is faster - the only things we care about are the talkid
 # and the seekid and the text.
 idindex = 0
@@ -32,8 +42,11 @@ with open(sys.argv[1], 'rb', 0) as file:
     idindex = xml.find(b'<talkid>')
     talkid = xml[idindex+len('<talkid>'):xml.find(b'</talkid>')].decode('ascii')
 
+count = 1
 for line in open(sys.argv[1]):
   if 'seekvideo' in line:
-    print(talkid + '-' + re.search(r'id="(\d+)"', line).group(1), '\t',
-          line.split('>')[1].split('<')[0])
+    print(talkid + '-' + re.search(r'id="(\d+)"', line).group(1), 
+          '\t',
+          clean(line.split('>')[1].split('<')[0]))
 
+  count += 1

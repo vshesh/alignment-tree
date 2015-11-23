@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+
+# This script takes a file that is generated from the TED corpus in the form
+# ```
+# TALKID-FRAGID|fragment
+# ``` 
+# 
+# And generates a mapping between sentences and ids in the format. This is an 
+# injective map, but never a surjective map (otherwise what would be the point!)
+# 
+# Then this map is used to make a final file like:
+# ```
+# TALKID-FRAG1ID|full sentence
+# ```
+# 
+# The fragid for a sentence will always be the fragid of the first fragment
+# in the sentence. 
+# 
+# Uses nltk's punkt sentence recognizer, and requires that the punkt nltk 
+# package be downloaded.
+
+from __future__ import print_function
+
+import os
+import sys
+import nltk
+import nltk.data
+import toolz as t
+import operator as op
+import re
+import fileinput
+from collections import defaultdict as ddict
+import json
+
+sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
+
+def clean(sentence):
+  s = sentence
+  s = re.sub(r'(\S)\.$', r'\1 .', s)
+  s = re.sub(r'(\S)\.\"$', r'\1 . "', s)
+  s = re.sub(r'([?!])\"$', r'\1 "', s)
+  return s
+
+
+def invert(d):
+  dd = ddict(lambda: [])
+  for k,v in d.items():
+    dd[v[0] if len(v) == 1 else tuple(v) if isinstance(v,list) else v].append(k)
+
+  return dd
+
+def genmapping(f=sys.stdin):
+  frags = f.readlines()
+  talkid = frags[0].split('\t')[0].split('-')[0]
+  sentences = sent_detector.tokenize(
+    '|'.join(map(lambda x: x.split('\t')[1].lstrip(), iter(frags))))
+  sentences[0] = '|' + sentences[0]
+
+  mapping = ddict(list)
+  fragids = [x.split('\t')[0].rstrip() for x in frags]
+  sid = 0
+  fid = 0
+  # first sentence mapping
+  for s in sentences:
+
+    if s.count('|') == 0: mapping[fragids[fid-1]].append(sid)
+    for f in fragids[fid:s.count('|')+fid]:
+      mapping[f].append(sid)
+
+    fid += s.count('|')
+    sid += 1
+
+  sids = sorted(invert(mapping).items(), 
+                key=(lambda x: x[0][0] if isinstance(x[0],tuple) else x[0]))
+
+  return {talkid: sids}
+
+def gensentences(mapping, f=sys.stdin, strict=True):
+  # map fid -> fragment
+  frags = f.readlines()
+  talkid = frags[0].split('\t')[0].split('-')[0]
+  sids = mapping[talkid]
+  fragmap = ddict(lambda: '', (map(str.strip, x.split('\t')) for x in frags))
+
+  # shows all sentences in order with their constituent fragments.
+  # print(t.valmap(lambda x: list(t.pluck(0,x)), 
+  #                t.groupby(t.compose(t.first,t.second), 
+  #                          t.keymap(lambda x: fragmap[x], mapping).items() )))
+  for sid, fids in sids:
+    # throw out sentences which are missing fragments.
+    if strict and not all(f in fragmap for f in fids): continue
+    if isinstance(sid, int):
+      print(talkid+ '-'+str(sid) + '|' + clean(' '.join(
+        t.get(sorted(fids, key=lambda x:int(x.split('-')[1])), fragmap))))
+    else: 
+      print('\n'.join(map('|'.join, 
+                          zip(map(lambda x: talkid + '-'+str(x),sid), 
+                              map(clean, sent_detector.tokenize(fragmap[fids[0]]))))))
+
+if __name__ == '__main__':
+  if sys.argv[1] == '-m':
+    print(json.dumps(genmapping(open(sys.argv[2]) 
+                                if len(sys.argv) > 2 
+                                else sys.stdin))+',')
+
+  else:
+    mapping = json.load(open(sys.argv[1]))
+    gensentences(mapping, open(sys.argv[2]))
+    # for f in next(os.walk(sys.argv[2]))[-1]:
+    #   gensentences(mapping, open(os.path.join(sys.argv[2], f)))
+

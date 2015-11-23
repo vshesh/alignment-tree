@@ -8,63 +8,63 @@ import fileinput
 import json
 
 # data pertaining to the various kinds of operations. It's a double dictionary -
-# each order has a dictionary of a tuple containing and order and 
+# each order has a dictionary of a tuple containing and order and
 operations = {
     2: {(0,1): 'N', (1,0): 'R'},
-    4: {(1,3,0,2): '4one', (2,0,3,1): '4two'}, 
-    5: {(1,3,0,4,2): '5one', 
-        (1,4,2,0,3): '5two', 
-        (2,0,4,1,3): '5three', 
-        (2,4,0,3,1): '5four', 
-        (3,0,2,4,1): '5five', 
+    4: {(1,3,0,2): '4one', (2,0,3,1): '4two'},
+    5: {(1,3,0,4,2): '5one',
+        (1,4,2,0,3): '5two',
+        (2,0,4,1,3): '5three',
+        (2,4,0,3,1): '5four',
+        (3,0,2,4,1): '5five',
         (3,1,4,0,2): '5six'
     },
-    6: {(1, 3, 0, 5, 2, 4): '6n1', 
-        (1, 3, 5, 0, 2, 4): '6n2', 
-        (1, 3, 5, 0, 4, 2): '6n3', 
-        (1, 3, 5, 2, 0, 4): '6n4', 
-        (1, 4, 0, 2, 5, 3): '6n5', 
-        (1, 4, 0, 3, 5, 2): '6n6', 
-        (1, 4, 2, 0, 5, 3): '6n7', 
-        (1, 4, 2, 5, 0, 3): '6n8', 
-        (1, 5, 2, 4, 0, 3): '6n9', 
-        (1, 5, 3, 0, 2, 4): '6n10', 
-        (1, 5, 3, 0, 4, 2): '6n11', 
-        (2, 0, 3, 5, 1, 4): '6n12', 
-        (2, 0, 4, 1, 5, 3): '6n13', 
-        (2, 0, 5, 3, 1, 4): '6n14', 
-        (2, 4, 0, 3, 5, 1): '6n15', 
-        (2, 4, 0, 5, 1, 3): '6n16', 
-        (2, 4, 0, 5, 3, 1): '6n17', 
-        (2, 4, 1, 5, 0, 3): '6n18', 
-        (2, 5, 0, 3, 1, 4): '6n19', 
-        (2, 5, 0, 4, 1, 3): '6n20', 
-        (2, 5, 1, 3, 0, 4): '6n21', 
-        (2, 5, 1, 4, 0, 3): '6n22', 
-        (2, 5, 3, 0, 4, 1): '6n23', 
-        (3, 0, 2, 5, 1, 4): '6n24', 
-        (3, 0, 4, 1, 5, 2): '6n25', 
-        (3, 0, 4, 2, 5, 1): '6n26', 
-        (3, 0, 5, 1, 4, 2): '6n27', 
-        (3, 0, 5, 2, 4, 1): '6n28', 
-        (3, 1, 4, 0, 5, 2): '6n29', 
-        (3, 1, 5, 0, 2, 4): '6n30', 
-        (3, 1, 5, 0, 4, 2): '6n31', 
-        (3, 1, 5, 2, 0, 4): '6n32', 
-        (3, 5, 0, 2, 4, 1): '6n33', 
-        (3, 5, 1, 4, 0, 2): '6n34', 
-        (3, 5, 2, 0, 4, 1): '6n35', 
-        (4, 0, 2, 5, 1, 3): '6n36', 
-        (4, 0, 2, 5, 3, 1): '6n37', 
-        (4, 0, 3, 1, 5, 2): '6n38', 
-        (4, 1, 3, 0, 5, 2): '6n39', 
-        (4, 1, 3, 5, 0, 2): '6n40', 
-        (4, 1, 5, 2, 0, 3): '6n41', 
-        (4, 1, 5, 3, 0, 2): '6n42', 
-        (4, 2, 0, 3, 5, 1): '6n43', 
-        (4, 2, 0, 5, 1, 3): '6n44', 
+    6: {(1, 3, 0, 5, 2, 4): '6n1',
+        (1, 3, 5, 0, 2, 4): '6n2',
+        (1, 3, 5, 0, 4, 2): '6n3',
+        (1, 3, 5, 2, 0, 4): '6n4',
+        (1, 4, 0, 2, 5, 3): '6n5',
+        (1, 4, 0, 3, 5, 2): '6n6',
+        (1, 4, 2, 0, 5, 3): '6n7',
+        (1, 4, 2, 5, 0, 3): '6n8',
+        (1, 5, 2, 4, 0, 3): '6n9',
+        (1, 5, 3, 0, 2, 4): '6n10',
+        (1, 5, 3, 0, 4, 2): '6n11',
+        (2, 0, 3, 5, 1, 4): '6n12',
+        (2, 0, 4, 1, 5, 3): '6n13',
+        (2, 0, 5, 3, 1, 4): '6n14',
+        (2, 4, 0, 3, 5, 1): '6n15',
+        (2, 4, 0, 5, 1, 3): '6n16',
+        (2, 4, 0, 5, 3, 1): '6n17',
+        (2, 4, 1, 5, 0, 3): '6n18',
+        (2, 5, 0, 3, 1, 4): '6n19',
+        (2, 5, 0, 4, 1, 3): '6n20',
+        (2, 5, 1, 3, 0, 4): '6n21',
+        (2, 5, 1, 4, 0, 3): '6n22',
+        (2, 5, 3, 0, 4, 1): '6n23',
+        (3, 0, 2, 5, 1, 4): '6n24',
+        (3, 0, 4, 1, 5, 2): '6n25',
+        (3, 0, 4, 2, 5, 1): '6n26',
+        (3, 0, 5, 1, 4, 2): '6n27',
+        (3, 0, 5, 2, 4, 1): '6n28',
+        (3, 1, 4, 0, 5, 2): '6n29',
+        (3, 1, 5, 0, 2, 4): '6n30',
+        (3, 1, 5, 0, 4, 2): '6n31',
+        (3, 1, 5, 2, 0, 4): '6n32',
+        (3, 5, 0, 2, 4, 1): '6n33',
+        (3, 5, 1, 4, 0, 2): '6n34',
+        (3, 5, 2, 0, 4, 1): '6n35',
+        (4, 0, 2, 5, 1, 3): '6n36',
+        (4, 0, 2, 5, 3, 1): '6n37',
+        (4, 0, 3, 1, 5, 2): '6n38',
+        (4, 1, 3, 0, 5, 2): '6n39',
+        (4, 1, 3, 5, 0, 2): '6n40',
+        (4, 1, 5, 2, 0, 3): '6n41',
+        (4, 1, 5, 3, 0, 2): '6n42',
+        (4, 2, 0, 3, 5, 1): '6n43',
+        (4, 2, 0, 5, 1, 3): '6n44',
         (4, 2, 0, 5, 3, 1): '6n45',
-        (4, 2, 5, 0, 3, 1): '6n46' 
+        (4, 2, 5, 0, 3, 1): '6n46'
     }
 }
 
@@ -74,11 +74,11 @@ class Node:
         self.order = order
         self.start = start
         self.end = end
-    
+
     def __repr__(self):
         if (self.order == 'T'): return "T("+str(self.start)+")"
         else: return self.order+"("+str(self.start)+", "+str(self.end)+")"
-    
+
     def __str__(self):
         if (self.order == 'T'): return str(self.start)
         else: return self.order+"("+str(self.start)+", "+str(self.end)+")"
@@ -88,43 +88,43 @@ def sanitize(alignments):
     prev2 = 0
     order = []
     words = []
-    
-    #deal with vanishing words by copying the mapping of the last word, 
+
+    #deal with vanishing words by copying the mapping of the last word,
     # e.g. [0-0 2-1] becomes [0-0 1-0 2-1]
     for x in alignments:
         split = x.split("-")
         first = int(split[0])
         second = int(split[1])
-        
+
         i = prev1+1
         while i < first: #vanishing words
             order.append(Node(prev2, prev2, "T"))
             words.append(prev2)
             i = i+1
-        
+
         order.append(Node(second, second, "T"))
         words.append(second)
         prev1 = first
         prev2 = second
-    
-    #deal with materializing words by removing missing indices and repacking, 
+
+    #deal with materializing words by removing missing indices and repacking,
     # and also deal with many-to-one mappings by duplicating the word
     # E.g. [0-0 1-2 2-3 3-3] => [0-0 1-1 2-2 3-2] => [0-0 1-1 2-2 3-3]
-    
+
     #remove duplicates and sort
     words.sort()
-    
+
     wmap = {}
     for i in range(0,len(words)):
         if i == 0 or words[i] != words[i-1]:
             wmap[words[i]] = i
-    
+
     order2 = []
     for x in order:
         index = x.start
         order2.append(Node(wmap[index], wmap[index], "T"))
         wmap[index] = wmap[index]+1
-    
+
     return order2
 
 def mapfromarray(array):
@@ -158,14 +158,14 @@ def unique_everseen(iterable, key=None):
 def sanitize2(alignments):
     # source to translation map
     forwardmap = mapfromarray(array([map(int, x.split('-')) for x in alignments]))
-    #remove duplicate maps that are greater than length 1.     
+    #remove duplicate maps that are greater than length 1.
     reducedmap = dict(unique_everseen(forwardmap.items(), lambda key: key[1]))
     keymap = dict(zip(reducedmap.keys(), range(len(reducedmap.keys())) ) )
     repackedmap = { keymap[key] : value for key, value in reducedmap.items() }
     newalignments = list(itertools.chain(
-                         *map(lambda x: [str(x[0])+'-'+str(v) for v in x[1]], 
+                         *map(lambda x: [str(x[0])+'-'+str(v) for v in x[1]],
                               repackedmap.items())))
-    return newalignments   
+    return newalignments
 
 
 def binaryparse(order):
@@ -192,7 +192,7 @@ def checkcontiguous(nodes):
     ''' takes a list of nodes (in any order) and makes sure
         that some permutation of the nodes is contiguous (ie, there
         are no breaks in the chain of numbers that they cover.) '''
-    
+
     s = sorted(nodes, key=lambda node: node.start)
     for i in range(len(s)-1):
         if (s[i].end +1 != s[i+1].start):
@@ -213,8 +213,8 @@ def parseOrderK(stack, order):
             align = sortedorder(operands, lambda node: node.start)
             if align in operations[order]:
                 stack = stack[:i] + \
-                        [Node(operands[align.index(0)].start, 
-                              operands[align.index(order-1)].end, 
+                        [Node(operands[align.index(0)].start,
+                              operands[align.index(order-1)].end,
                               operations[order][align], operands)] + \
                         stack[i+order:]
                 i -= 1
@@ -258,8 +258,8 @@ def lisptree(stack):
 def jsonPreorder(tree):
     if (tree == None): return
     s = { "name": str(tree)}
-    if len(tree.children) > 0: 
-        s['children'] = [jsonPreorder(t) for t in tree.children] 
+    if len(tree.children) > 0:
+        s['children'] = [jsonPreorder(t) for t in tree.children]
     return s
 
 def jsonTree(stack, linenum, alignment, source, translation):
@@ -270,30 +270,37 @@ def jsonTree(stack, linenum, alignment, source, translation):
         j["parse_tree"] = jsonPreorder(stack[0])
     else:
         j["success"] = False
-        j ['parse_tree'] = [jsonPreorder(t) for t in stack]  
+        j ['parse_tree'] = [jsonPreorder(t) for t in stack]
     return json.dumps(j)
 
 if __name__ == '__main__':
 
-    opts, args = getopt(sys.argv[1:], 'jl', ['--json', '--lisp'])
+    opts, args = getopt(sys.argv[1:], 'ajl', ['--align-only','--json', '--lisp'])
     outformat = 'lisp'
+    alignonly = False
     for o,a in opts:
         if o == '-j' or o == '--json':
             outformat = 'json'
-        elif o == '-l' or l == '--lisp':
+        elif o == '-l' or o == '--lisp':
             outformat = 'lisp'
-
+        elif o == '-a' or o == '--align-only':
+            alignonly = True
 
     if outformat is 'json': print '['
     count= 1
     for line in fileinput.input(args):
         if(line.strip() == ""): continue
 
-        source, translation, alignment = line.split('|||')
-        
-        # can happen when alignment doesn't parse or 
+        if alignonly:
+          source = ''
+          translation = ''
+          alignment = line
+        else:
+          source, translation, alignment = line.split('|||')
+
+        # can happen when alignment doesn't parse or
         # hand-aligned data has "rejected pairs"
-        if alignment.strip() == "": continue 
+        if alignment.strip() == "": continue
         order = sanitize(sanitize2(alignment.strip().split(' ')))
 
         prevresult = []
@@ -305,16 +312,16 @@ if __name__ == '__main__':
                                  parseOrderK(result, 4),5),6))
 
         if outformat == 'json':
-            print jsonTree(result, count, alignment.strip(), 
+            print jsonTree(result, count, alignment.strip(),
                            source.strip(), translation.strip()) + ','
         elif outformat == 'lisp':
             print lisptree(result)
         else:
             printtree(result)
-        count +=1 
+        count +=1
 
     if outformat is 'json': print '{}]'
-    
+
 
 
 

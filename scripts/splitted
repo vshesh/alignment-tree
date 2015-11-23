@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 scriptdir=$(dirname $BASH_SOURCE)
 
 n=$(grep '</file>' $1 | uniq -c | cut -d' ' -f 1)
@@ -23,8 +25,14 @@ for f in $(find $dir/*[0-9]); do
   echo '</file>' >> $dir/temp
 
   # convert to a text file with id, sentence fragment.
+
+  # then generate sentences from this text (under the assumption that the 
+  # ted translations are parallel corpora (which has been found to be true
+  # so far)) and put it back in the original location
+
   # put that text file back in place of the original one.
   $scriptdir/tedxml2txt $dir/temp > $f
+
   echo $f
 done
 
