@@ -20,6 +20,15 @@ extract_op = lambda s: s.split('^')[0]
 extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
 extent = lambda r: r[1]-r[0]
 
+
+# def walk_and_tuplify(tree, f):
+#   #takes a parsed tree and creates a tuplified replacement with the 
+#   #initial 0 turned into a tuple
+#   if not isinstance(sexp, list): return
+#   tree[0] = (tree[0], f(tree))
+#   for t in tree[1:]:
+#     walk_and_tuplify(t, f)
+
 # --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
 #>>> parse_sexp("(+ 5 (+ 3 5))")
@@ -154,15 +163,6 @@ def max_operation_depth(op):
     if extract_op(tree[0]) == op:
       return depth(tree)
     return max( ops_depth(c) for c in tree[1:])
-  return ops_depth
-
-
-def min_operation_depth(op):
-  def ops_depth(tree):
-    if not isinstance(tree, list): return 0
-    if extract_op(tree[0])  == op:
-      return depth(tree)
-    return min( ops_depth(c) for c in tree[1:])
   return ops_depth
 
 

@@ -98,6 +98,7 @@ __pycache__
 # these are genfiles and shouldn't be committed.
 word-alignment-data
 data
+fast_align
 
 
 
