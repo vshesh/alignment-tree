@@ -21,14 +21,6 @@ extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
 extent = lambda r: r[1]-r[0]
 
 
-# def walk_and_tuplify(tree, f):
-#   #takes a parsed tree and creates a tuplified replacement with the 
-#   #initial 0 turned into a tuple
-#   if not isinstance(sexp, list): return
-#   tree[0] = (tree[0], f(tree))
-#   for t in tree[1:]:
-#     walk_and_tuplify(t, f)
-
 # --------------------------- I/O Utilities ------------------------------
 #Sample Usage:
 #>>> parse_sexp("(+ 5 (+ 3 5))")
@@ -99,7 +91,8 @@ def group_by_op(tree):
 
 
 def height_list(tree):
-  #return a list of all the heights in a tree from the leaf nodes
+  # return a list of all the heights in a tree from the leaf nodes
+  # it's the same as all the depths to the leaf nodes from the root.
   if not isinstance(tree, list): return [0]
   return [x+1 for x in t.concat(height_list(c) for c in tree[1:])]
 
