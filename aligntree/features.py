@@ -13,16 +13,39 @@ def mean(l):
   t = 0
   c = 0
   for e in l:
-    c+= 1
+    c += 1
     t += e
-  return float(t)/c
+  return 0 if c is 0 else float(t)/c
 
+def shifted_data_variance(data):
+  K, data = t.peek(data)
+  total = 0
+  sqtotal = 0
+  n = 0
+  for x in data:
+    n += 1
+    total += x - K
+    sqtotal += (x-K)*(x-K)
+  # the n-1 at the end is for sample variance. use n for population variance.
+  return 0 if n < 2 else (sqtotal - (total*total)/n)/(n-1)
 
-def std_dev(l):
-  avg = mean(l)
-  variance = map(lambda x: (x - avg)**2, l)
-  return math.sqrt(mean(variance))
+def naive_variance(l):
+  """
+  This algorithm is very prone to catastrophic cancellation.
+  If sqtotal and total are about the same, then we lose lots of precision
+  in the calculation.
+  """
+  count = 0
+  total = 0
+  sqtotal = 0
+  for e in l:
+    count += 1
+    total += e
+    sqtotal += e**2
 
+  return math.sqrt((sqtotal - total)/(c-1))
+
+std_dev = lambda l: math.sqrt(shifted_data_variance(l))
 
 extract_op = lambda s: s.split('^')[0]
 extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
@@ -142,8 +165,10 @@ def op_range(func, op):
 
 def op_counter(op):
   def num_ops(tree):
-    if not isinstance(tree, list): return 0
-    return (1 if tree[0].split('^')[0] == op else 0) + sum(num_ops(c) for c in tree[1:])
+    return t.pipe(tree,
+                  flatten,
+                  tc.filter(lambda x: extract_op(x) == op),
+                  t.count)
 
   return num_ops
 
