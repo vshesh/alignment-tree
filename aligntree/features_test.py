@@ -44,4 +44,4 @@ def test_op_count():
 
 def test_in_order_traversal():
   assert(f.mean_x_pos_R_in_tree(smalltree) == 0)
-  assert(int(f.mean_x_pos_R_in_tree(mediumtree)) == 51746)
+  assert(int(f.mean_x_pos_R_in_tree(mediumtree)) == 24)

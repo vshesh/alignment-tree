@@ -131,7 +131,8 @@ def height_list(tree):
 def in_order(tree):
   if not isinstance(tree, list):
     return tree
-  return list(t.interpose(tree[0], t.concat(map(in_order, tree[1:]))))
+  # return list(t.interpose(tree[0], t.concat(map(in_order, tree[1:]))))
+  return list(flatten(list(t.interpose(tree[0], map(in_order, tree[1:])))))
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -209,7 +210,6 @@ def mean_x_pos_R_in_tree(tree):
 def std_dev_x_pos_R_in_tree(tree):
   traversal = in_order(tree)
   x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  print(x_pos)
   return std_dev(x_pos)
 
 
