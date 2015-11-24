@@ -43,9 +43,9 @@ def naive_variance(l):
     total += e
     sqtotal += e**2
 
-  return math.sqrt((sqtotal - total)/(c-1))
+  return 0 if count < 2 else math.sqrt((sqtotal - total)/(count-1))
 
-std_dev = lambda l: math.sqrt(shifted_data_variance(l))
+stdev = lambda l: math.sqrt(naive_variance(l))
 
 extract_op = lambda s: s.split('^')[0]
 extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
@@ -131,8 +131,8 @@ def height_list(tree):
 def in_order(tree):
   if not isinstance(tree, list):
     return tree
-  # return list(t.interpose(tree[0], t.concat(map(in_order, tree[1:]))))
   return list(flatten(list(t.interpose(tree[0], map(in_order, tree[1:])))))
+
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -182,9 +182,9 @@ def mean_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
   return mean(height_list(tree))
 
-def std_dev_height_from_leaf(tree):
+def stdev_height_from_leaf(tree):
   if not isinstance(tree, list): return 0
-  return std_dev(height_list(tree))
+  return stdev(height_list(tree))
 
 
 def min_height_tree_from_leaf(tree):
@@ -207,10 +207,19 @@ def mean_x_pos_R_in_tree(tree):
   return mean(x_pos)
 
 
-def std_dev_x_pos_R_in_tree(tree):
+def stdev_x_pos_R_in_tree(tree):
   traversal = in_order(tree)
   x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  return std_dev(x_pos)
+  return stdev(x_pos)
+
+
+def unzip(path, tree):
+  if not hasattr(tree, '__iter__'):
+    yield path + [tree]
+  else:
+    for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
+      yield p
+
 
 
 features = [
@@ -222,15 +231,14 @@ features = [
   ('max_range_reverse', op_range(max, ':R')),
   ('min_range_reverse', op_range(min, ':R')),
   ('mean_range_reverse', op_range(mean, ':R')),
-  ('std_dev_range_reverse', op_range(std_dev, ':R')),
+  ('stdev_range_reverse', op_range(stdev, ':R')),
   ('mean_height_from_leaf', mean_height_from_leaf),
-  ('std_dev_height_from_leaf', std_dev_height_from_leaf),
+  ('stdev_height_from_leaf', stdev_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf),
   ('reverse_max_depth', max_operation_depth(':R')),
   ('mean_x_pos_R_in_tree', mean_x_pos_R_in_tree),
-  ('std_dev_x_pos_R_in_tree', std_dev_x_pos_R_in_tree),
+  ('stdev_x_pos_R_in_tree', stdev_x_pos_R_in_tree),
 ]
-
 
 # add compressed versions of the features.
 features += [('compressed_' + x[0], t.compose(x[1], compress))
