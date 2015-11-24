@@ -213,15 +213,6 @@ def stdev_x_pos_R_in_tree(tree):
   return stdev(x_pos)
 
 
-def unzip(path, tree):
-  if not hasattr(tree, '__iter__'):
-    yield path + [tree]
-  else:
-    for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
-      yield p
-
-
-
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
