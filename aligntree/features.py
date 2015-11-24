@@ -19,6 +19,8 @@ def mean(l):
 
 def shifted_data_variance(data):
   # realize list. we're not dealing with anything big enough for this to matter.
+  # In fact, I wouldn't be suprised if using generators is actually slower
+  # for us.
   data = list(data)
   if len(data) < 2: return 0
 
