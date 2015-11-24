@@ -40,3 +40,8 @@ def test_op_count():
   assert(normalops(mediumtree) == 14)
   assert(reverseops(mediumtree) == 7)
   assert(normalops(mediumtree) + reverseops(mediumtree) == f.num_nodes(mediumtree))
+
+
+def test_in_order_traversal():
+  assert(f.mean_x_pos_R_in_tree(smalltree) == 0)
+  assert(int(f.mean_x_pos_R_in_tree(mediumtree)) == 51746)

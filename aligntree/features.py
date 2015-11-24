@@ -128,6 +128,10 @@ def height_list(tree):
   return [x+1 for x in t.concat(height_list(c) for c in tree[1:])]
 
 
+def in_order(tree):
+  if not isinstance(tree, list):
+    return tree
+  return list(t.interpose(tree[0], t.concat(map(in_order, tree[1:]))))
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -196,6 +200,19 @@ def max_operation_depth(op):
   return ops_depth
 
 
+def mean_x_pos_R_in_tree(tree):
+  traversal = in_order(tree)
+  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
+  return mean(x_pos)
+
+
+def std_dev_x_pos_R_in_tree(tree):
+  traversal = in_order(tree)
+  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
+  print(x_pos)
+  return std_dev(x_pos)
+
+
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -210,6 +227,8 @@ features = [
   ('std_dev_height_from_leaf', std_dev_height_from_leaf),
   ('min_height_tree_from_leaf', min_height_tree_from_leaf),
   ('reverse_max_depth', max_operation_depth(':R')),
+  ('mean_x_pos_R_in_tree', mean_x_pos_R_in_tree),
+  ('std_dev_x_pos_R_in_tree', std_dev_x_pos_R_in_tree),
 ]
 
 
