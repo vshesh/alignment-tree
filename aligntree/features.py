@@ -18,7 +18,13 @@ def mean(l):
   return 0 if c is 0 else float(t)/c
 
 def shifted_data_variance(data):
-  K, data = t.peek(data)
+  # realize list. we're not dealing with anything big enough for this to matter.
+  # In fact, I wouldn't be suprised if using generators is actually slower
+  # for us.
+  data = list(data)
+  if len(data) < 2: return 0
+
+  K = data[0]
   total = 0
   sqtotal = 0
   n = 0
@@ -27,7 +33,8 @@ def shifted_data_variance(data):
     total += x - K
     sqtotal += (x-K)*(x-K)
   # the n-1 at the end is for sample variance. use n for population variance.
-  return 0 if n < 2 else (sqtotal - (total*total)/n)/(n-1)
+  return (sqtotal - (total*total)/n)/(n-1)
+
 
 def naive_variance(l):
   """
@@ -45,7 +52,7 @@ def naive_variance(l):
 
   return 0 if count < 2 else math.sqrt((sqtotal - total)/(count-1))
 
-stdev = lambda l: math.sqrt(naive_variance(l))
+stdev = lambda l: math.sqrt(shifted_data_variance(l))
 
 extract_op = lambda s: s.split('^')[0]
 extract_range = lambda s: list(map(int, s.split('^')[1].split('-')))
@@ -133,6 +140,14 @@ def in_order(tree):
     return tree
   return list(flatten(list(t.interpose(tree[0], map(in_order, tree[1:])))))
 
+
+def unzip(path, tree):
+  if not hasattr(tree, '__iter__'): 
+    yield path + [tree]
+  else:
+    for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
+      yield p
+
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -213,6 +228,50 @@ def stdev_x_pos_R_in_tree(tree):
   return stdev(x_pos)
 
 
+def markov_tables(tree):
+  result = {}
+  # for orders 1 and 2:
+  for order in xrange(1, 3):
+    keySet, averages = set(), {}
+    # process the initial sliding window to just contain N/R's
+    paths = [list(list(_.split('^')[0][1] if ':' in _ else _ for _ in elem) \
+      for elem in t.sliding_window(order, path)) \
+      for path in list(unzip([], tree))]
+    for i in xrange(len(paths)):
+      order_counter = {}
+      for window in paths[i]:
+        if window[len(window) - 1] == 'R' or window[len(window) - 1] == 'N':
+          if ''.join(window) in order_counter:
+            order_counter[''.join(window)] += 1
+          else:
+            order_counter[''.join(window)] = 1
+            keySet.add(''.join(window))
+      total = float(sum(list(order_counter.itervalues())))
+      if total > 0:
+        for key in order_counter:
+          order_counter[key] = float(order_counter[key]) / total
+      # save the number of operations to original list
+      paths[i] = order_counter
+    # omit any empty paths
+    paths = [path for path in paths if len(path) > 0]
+    # combine all the probabilities from the different paths
+    for key in keySet:
+      for path in paths:
+        if key in averages and key in path:
+          averages[key] += path[key]
+        elif key in path:
+          averages[key] = path[key]
+      # divide by number of paths to get final result
+      averages[key] = float(averages[key]) / float(len(paths))
+    result.update(averages)
+  # update result to have new keys with 'markov_'
+  keys = result.keys()
+  for key in keys: 
+    result['markov_' + key] = str(result[key])
+    del result[key]
+  return result
+
+
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -238,6 +297,7 @@ features += [('compressed_' + x[0], t.compose(x[1], compress))
 
 if __name__ == '__main__':
 
+  markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
   opts, args = getopt.getopt(sys.argv[1:], 'l:', ['--language'])
   language = None
   for o,a in opts:
@@ -245,9 +305,12 @@ if __name__ == '__main__':
       language = a + ','
 
   print(('language,' if language is not None else '') +
-         ','.join(x[0] for x in features))
+         ','.join(x[0] for x in features) + ',' + 
+          ','.join(markov_features) + ',' +
+          ','.join([('compressed_' + f) for f in markov_features]))
 
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print( (language or '') + ','.join(
-      str(f[1](tree)) for f in features))
+    print( (language or '') + ','.join([str(f[1](tree)) for f in features] + 
+      list(t.get(markov_features, markov_tables(tree), str(0.0))) + 
+      list(t.get(markov_features, markov_tables(compress(tree)), str(0.0)))))
