@@ -147,7 +147,7 @@ def unzip(path, tree):
   else:
     for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
       yield p
-      
+
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -310,5 +310,5 @@ if __name__ == '__main__':
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
     print( (language or '') + ','.join([str(f[1](tree)) for f in features] + 
-      t.get(markov_features, markov_tables(tree), 0.0) + 
-      t.get(markov_features, markov_tables(compress(tree)), 0.0)))
+      list(t.get(markov_features, markov_tables(tree), 0.0)) + 
+      list(t.get(markov_features, markov_tables(compress(tree)), 0.0))))
