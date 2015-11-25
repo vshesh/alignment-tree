@@ -133,6 +133,14 @@ def in_order(tree):
     return tree
   # return list(t.interpose(tree[0], t.concat(map(in_order, tree[1:]))))
   return list(flatten(list(t.interpose(tree[0], map(in_order, tree[1:])))))
+
+
+def unzip(path, tree):
+  if not hasattr(tree, '__iter__'): 
+    yield path + [tree]
+  else:
+    for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
+      yield p
 # ----------------------- Features -------------------------------------------
 
 # # this is a little more computationally intensive than we need.
@@ -213,6 +221,48 @@ def std_dev_x_pos_R_in_tree(tree):
   return std_dev(x_pos)
 
 
+def markov_tables(tree):
+  result = {}
+  # for orders 1 and 2:
+  for order in xrange(1, 3):
+    keySet, averages = set(), {}
+    # process the initial sliding window to just contain N/R's
+    paths = [list(list(_.split('^')[0][1] if ':' in _ else _ for _ in elem) \
+      for elem in t.sliding_window(order, path)) \
+      for path in list(unzip([], tree))]
+    for i in xrange(len(paths)):
+      order_counter = {}
+      for window in paths[i]:
+        if window[len(window) - 1] == 'R' or window[len(window) - 1] == 'N':
+          if ''.join(window) in order_counter:
+            order_counter[''.join(window)] += 1
+          else:
+            order_counter[''.join(window)] = 1
+            keySet.add(''.join(window))
+      total = float(sum(list(order_counter.itervalues())))
+      if total > 0:
+        for key in order_counter:
+          order_counter[key] = float(order_counter[key]) / total
+      # save the number of operations to original list
+      paths[i] = order_counter
+    # omit any empty paths
+    paths = [path for path in paths if len(path) > 0]
+    # combine all the probabilities from the different paths
+    for key in keySet:
+      for path in paths:
+        if key in averages and key in path:
+          averages[key] += path[key]
+        elif key in path:
+          averages[key] = path[key]
+      # divide by number of paths to get final result
+      averages[key] = float(averages[key]) / float(len(paths))
+    result.update(averages)
+  # add final 'markov_' labels to relevant features
+  features_to_add = [('markov_' + pair[0], pair[1]) \
+    for pair in list(result.iteritems())]
+  return features_to_add
+
+
 features = [
   ('length', length),
   ('num_nodes', num_nodes),
@@ -239,6 +289,7 @@ features += [('compressed_' + x[0], t.compose(x[1], compress))
 
 if __name__ == '__main__':
 
+  markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
   opts, args = getopt.getopt(sys.argv[1:], 'l:', ['--language'])
   language = None
   for o,a in opts:
@@ -246,9 +297,12 @@ if __name__ == '__main__':
       language = a + ','
 
   print(('language,' if language is not None else '') +
-         ','.join(x[0] for x in features))
+         ','.join(x[0] for x in features) + ',' + 
+          ','.join(markov_features) + ',' +
+          ','.join([('compressed_' + f) for f in markov_features]))
 
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print( (language or '') + ','.join(
-      str(f[1](tree)) for f in features))
+    print( (language or '') + ','.join([str(f[1](tree)) for f in features] + 
+      t.get(markov_features, markov_tables(tree), 0.0) + 
+      t.get(markov_features, markov_tables(compress(tree)), 0.0)))
