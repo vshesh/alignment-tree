@@ -264,10 +264,9 @@ def markov_tables(tree):
       # divide by number of paths to get final result
       averages[key] = float(averages[key]) / float(len(paths))
     result.update(averages)
-  # add final 'markov_' labels to relevant features
-  features_to_add = [('markov_' + pair[0], pair[1]) \
-    for pair in list(result.iteritems())]
-  return features_to_add
+  # update result to have new keys with 'markov_'
+  for key in result: result['markov_' + key] = str(result.pop(key))
+  return result
 
 
 features = [
@@ -310,5 +309,5 @@ if __name__ == '__main__':
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
     print( (language or '') + ','.join([str(f[1](tree)) for f in features] + 
-      list(t.get(markov_features, markov_tables(tree), 0.0)) + 
-      list(t.get(markov_features, markov_tables(compress(tree)), 0.0))))
+      list(t.get(markov_features, markov_tables(tree), str(0.0))) + 
+      list(t.get(markov_features, markov_tables(compress(tree)), str(0.0)))))
