@@ -5,6 +5,7 @@ import aligntree.features as f
 
 
 smalltree = f.parse_sexp('(:N^0-2 (:N^0-1 0 1) 2)')[0]
+markovtesttree = f.parse_sexp('(:N^0-6 (:R^0-3 (:N^2-3 2 3) (:N^0-1 0 1)) (:N^4-6 (:N^4-5 4 5) 6))')[0]
 smallishtree = f.parse_sexp('(:N^0-13 (:N^0-12 (:N^0-11 (:N^0-10 (:N^0-9 (:N^0-8 (:N^0-7 (:N^0-6 (:N^0-5 (:N^0-4 (:N^0-3 (:N^0-2 (:N^0-1 0 1) 2) 3) 4) 5) 6) 7) 8) 9) 10) 11) 12) 13)')[0]
 mediumtree = f.parse_sexp('(:N^0-21 (:R^0-20 (:R^3-20 (:R^4-20 (:R^5-20 (:R^8-20 (:N^9-20 (:N^9-19 (:N^9-18 (:N^9-17 (:N^9-11 (:N^9-10 9 10) 11) (:R^12-17 (:R^14-17 (:N^15-17 (:N^15-16 15 16) 17) 14) (:N^12-13 12 13))) 18) 19) 20) 8) (:N^5-7 (:N^5-6 5 6) 7)) 4) 3) (:N^0-2 (:N^0-1 0 1) 2)) 21)')[0]
 
@@ -46,3 +47,15 @@ def test_op_count():
 def test_in_order_traversal():
   assert(f.mean_x_pos_R_in_tree(smalltree) == 0)
   assert(int(f.mean_x_pos_R_in_tree(mediumtree)) == 24)
+
+def test_markov_tables():
+  markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
+  assert(t.get(markov_features, f.markov_tables(markovtesttree), str(0.0)) == 
+    ('0.809523809524', '0.190476190476', '0.285714285714', '0.285714285714', '0.428571428571', '0.0'))
+  assert(t.get(markov_features, f.markov_tables(smalltree), str(0.0)) == 
+    ('1.0', '0.0', '0.0', '0.0', '1.0', '0.0'))
+  assert(t.get(markov_features, f.markov_tables(f.compress(smalltree)), str(0.0)) == 
+    ('1.0', '0.0', '0.0', '0.0', '0.0', '0.0'))
+
+
+
