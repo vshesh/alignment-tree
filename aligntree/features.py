@@ -265,7 +265,10 @@ def markov_tables(tree):
       averages[key] = float(averages[key]) / float(len(paths))
     result.update(averages)
   # update result to have new keys with 'markov_'
-  for key in result: result['markov_' + key] = str(result.pop(key))
+  keys = result.keys()
+  for key in keys: 
+    result['markov_' + key] = str(result[key])
+    del result[key]
   return result
 
 
