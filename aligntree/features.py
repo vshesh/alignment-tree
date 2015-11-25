@@ -233,16 +233,12 @@ def max_operation_depth(op):
   return ops_depth
 
 
-def mean_inorder_pos_reverse(tree):
-  traversal = in_order(tree)
-  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  return mean(x_pos)
+def inorder_pos(op, aggregator):
+  def inorder_pos_wrapper(tree):
+    return aggregator(x[0] for x in enumerate(in_order(tree))
+                      if extract_op(x[1]) == op)
 
-
-def stdev_inorder_pos_reverse(tree):
-  traversal = in_order(tree)
-  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  return stdev(x_pos)
+  return inorder_pos_wrapper
 
 
 def markov_tables(tree):
@@ -293,11 +289,14 @@ features = [
   # these three, being basic "dimensions" of a tree, are also allowed
   # to be left alone.
   ('length', length, (lambda: 1,) ),
-  ('num_nodes', num_nodes, (lambda: 1, length)),
-  ('depth', depth, (lambda: 1, length)),
 
+  ('num_nodes', num_nodes, (lambda: 1, length)),
   ('num_normal', op_counter(':N'), (num_nodes,)),
   ('num_reverse', op_counter(':R'), (num_nodes,)),
+
+  ('depth', depth, (lambda: 1, length)),
+  ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
+
 
   ('max_range_reverse', op_range(max, ':R'), (length,)),
   ('min_range_reverse', op_range(min, ':R'), (length,)),
@@ -309,10 +308,9 @@ features = [
   ('stdev_leaf_height', leaf_height(stdev), (length, depth)),
   ('min_leaf_height', leaf_height(min), (length, depth)),
 
-  ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
 
-  ('mean_inorder_pos_reverse', mean_inorder_pos_reverse, (num_nodes,)),
-  ('stdev_inorder_pos_reverse', stdev_inorder_pos_reverse, (num_nodes,)),
+  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,)),
+  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,)),
 ]
 
 # add compressed versions of the features.
