@@ -6,6 +6,7 @@ from sklearn.mixture import GMM
 import math
 import numpy as np
 import toolz as t
+import os
 
 
 def read_file_to_scipy_data(file_name, label):
@@ -60,3 +61,5 @@ print metrics.classification_report(french_pred_labels, french_true_labels)# map
 
 print "arabic"
 print metrics.classification_report(arabic_pred_labels, arabic_true_labels)
+
+os.system('say "Classification complete"')
