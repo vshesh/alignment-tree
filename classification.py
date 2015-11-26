@@ -48,9 +48,15 @@ german_pred_labels = [1 if x >= 0 else 0 for x in german_predictions]
 french_true_labels = [1 if x in french[0] else 0 for x in all_data]
 french_pred_labels = [1 if x >= 0 else 0 for x in french_predictions]
 
+arabic_true_labels = [1 if x in arabic[0] else 0 for x in all_data]
+arabic_pred_labels = [1 if x >= 0 else 0 for x in arabic_predictions]
+
 
 print "German"
 print metrics.classification_report(german_pred_labels, german_true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
 
 print "french"
 print metrics.classification_report(french_pred_labels, french_true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
+
+print "arabic"
+print metrics.classification_report(arabic_pred_labels, arabic_true_labels)
