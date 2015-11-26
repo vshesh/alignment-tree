@@ -7,6 +7,7 @@ import toolz as t
 import toolz.curried as tc
 import fileinput
 import getopt
+from collections import defaultdict as dd
 
 # -------------------------- GENERAL UTILITIES -----------------------------
 def mean(l):
@@ -142,11 +143,34 @@ def in_order(tree):
 
 
 def unzip(path, tree):
-  if not hasattr(tree, '__iter__'): 
+  if isinstance(tree, str) or not hasattr(tree, '__iter__'):
     yield path + [tree]
   else:
     for p in t.mapcat(t.partial(unzip, path + tree[0:1]), tree[1:]):
       yield p
+
+
+# another markov implementation (maybe a bit more generalized?)
+# leaving it here for reference
+
+# def markov(order, chain):
+#   events = list(t.sliding_window(order+1, chain))
+#   boxes = t.reduceby(lambda x: x[:-1], lambda acc,x:acc+1, events,init=0)
+#   return dd(lambda: 0.0,
+#             t.itemmap(lambda x: ('-'.join(x[0]), float(x[1])/boxes[x[0][:-1]]),
+#                       t.frequencies(events)))
+
+# def aggregate_markov_tables(order, ops, agf):
+#   def markov_aggregator(tree):
+#     return t.pipe(unzip([], tree),
+#                   tc.map(lambda x: markov(order, x[:-1])),
+#                   tc.pluck(ops),
+#                   lambda xs: zip(*xs),
+#                   tc.map(agf),
+#                   list)
+#   return markov_aggregator
+
+# aggregate_markov_tables(1, ['N-N', 'N-R', 'R-R', 'R-N'], mean)(tree)
 
 # ----------------------- Features -------------------------------------------
 
@@ -193,18 +217,11 @@ def op_counter(op):
   return num_ops
 
 
-def mean_height_from_leaf(tree):
-  if not isinstance(tree, list): return 0
-  return mean(height_list(tree))
-
-def stdev_height_from_leaf(tree):
-  if not isinstance(tree, list): return 0
-  return stdev(height_list(tree))
-
-
-def min_height_tree_from_leaf(tree):
-  if not isinstance(tree, list): return 0
-  return min(height_list(tree))
+def leaf_height(aggregator):
+  def leaf_height_wrapper(tree):
+    if not isinstance(tree, list): return 0
+    return aggregator(height_list(tree))
+  return leaf_height_wrapper
 
 
 def max_operation_depth(op):
@@ -216,16 +233,12 @@ def max_operation_depth(op):
   return ops_depth
 
 
-def mean_x_pos_R_in_tree(tree):
-  traversal = in_order(tree)
-  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  return mean(x_pos)
+def inorder_pos(op, aggregator):
+  def inorder_pos_wrapper(tree):
+    return aggregator(x[0] for x in enumerate(in_order(tree))
+                      if extract_op(x[1]) == op)
 
-
-def stdev_x_pos_R_in_tree(tree):
-  traversal = in_order(tree)
-  x_pos = [x[0] for x in enumerate(traversal) if ':R' in x[1]]
-  return stdev(x_pos)
+  return inorder_pos_wrapper
 
 
 def markov_tables(tree):
@@ -234,8 +247,8 @@ def markov_tables(tree):
   for order in xrange(1, 3):
     keySet, averages = set(), {}
     # process the initial sliding window to just contain N/R's
-    paths = [list(list(_.split('^')[0][1] if ':' in _ else _ for _ in elem) \
-      for elem in t.sliding_window(order, path)) \
+    paths = [list(list(_.split('^')[0][1] if ':' in _ else _ for _ in elem)
+      for elem in t.sliding_window(order, path))
       for path in list(unzip([], tree))]
     for i in xrange(len(paths)):
       order_counter = {}
@@ -266,28 +279,38 @@ def markov_tables(tree):
     result.update(averages)
   # update result to have new keys with 'markov_'
   keys = result.keys()
-  for key in keys: 
+  for key in keys:
     result['markov_' + key] = str(result[key])
     del result[key]
   return result
 
 
 features = [
-  ('length', length),
-  ('num_nodes', num_nodes),
-  ('depth', depth),
-  ('num_normal', op_counter(':N')),
-  ('num_reverse', op_counter(':R')),
-  ('max_range_reverse', op_range(max, ':R')),
-  ('min_range_reverse', op_range(min, ':R')),
-  ('mean_range_reverse', op_range(mean, ':R')),
-  ('stdev_range_reverse', op_range(stdev, ':R')),
-  ('mean_height_from_leaf', mean_height_from_leaf),
-  ('stdev_height_from_leaf', stdev_height_from_leaf),
-  ('min_height_tree_from_leaf', min_height_tree_from_leaf),
-  ('reverse_max_depth', max_operation_depth(':R')),
-  ('mean_x_pos_R_in_tree', mean_x_pos_R_in_tree),
-  ('stdev_x_pos_R_in_tree', stdev_x_pos_R_in_tree),
+  # these three, being basic "dimensions" of a tree, are also allowed
+  # to be left alone.
+  ('length', length, (lambda: 1,) ),
+
+  ('num_nodes', num_nodes, (lambda: 1, length)),
+  ('num_normal', op_counter(':N'), (num_nodes,)),
+  ('num_reverse', op_counter(':R'), (num_nodes,)),
+
+  ('depth', depth, (lambda: 1, length)),
+  ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
+
+
+  ('max_range_reverse', op_range(max, ':R'), (length,)),
+  ('min_range_reverse', op_range(min, ':R'), (length,)),
+  ('mean_range_reverse', op_range(mean, ':R'), (length,)),
+  ('stdev_range_reverse', op_range(stdev, ':R'), (length,)),
+
+  # max leaf height is the same as depth of tree
+  ('mean_leaf_height', leaf_height(mean), (length, depth)),
+  ('stdev_leaf_height', leaf_height(stdev), (length, depth)),
+  ('min_leaf_height', leaf_height(min), (length, depth)),
+
+
+  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,)),
+  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,)),
 ]
 
 # add compressed versions of the features.
@@ -305,12 +328,13 @@ if __name__ == '__main__':
       language = a + ','
 
   print(('language,' if language is not None else '') +
-         ','.join(x[0] for x in features) + ',' + 
+         ','.join(x[0] for x in features) + ',' +
           ','.join(markov_features) + ',' +
           ','.join([('compressed_' + f) for f in markov_features]))
 
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print( (language or '') + ','.join([str(f[1](tree)) for f in features] + 
-      list(t.get(markov_features, markov_tables(tree), str(0.0))) + 
+    print( (language or '') + ','.join([str(f[1](tree)) for f in features] +
+      list(t.get(markov_features, markov_tables(tree), str(0.0))) +
       list(t.get(markov_features, markov_tables(compress(tree)), str(0.0)))))
+
