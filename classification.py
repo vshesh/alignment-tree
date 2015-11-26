@@ -42,10 +42,15 @@ french_predictions = french_clf.score(all_data)
 
 #lets just do german
 
-true_labels = [1 if x in german[0] else 0 for x in all_data]
-print german_predictions
-predictions = [1 if x >= 0 else 0 for x in german_predictions]
+german_true_labels = [1 if x in german[0] else 0 for x in all_data]
+german_pred_labels = [1 if x >= 0 else 0 for x in german_predictions]
+
+french_true_labels = [1 if x in french[0] else 0 for x in all_data]
+french_pred_labels = [1 if x >= 0 else 0 for x in french_predictions]
 
 
-print "GMM"
-print metrics.classification_report(predictions, true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
+print "German"
+print metrics.classification_report(german_pred_labels, german_true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
+
+print "french"
+print metrics.classification_report(french_pred_labels, french_true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
