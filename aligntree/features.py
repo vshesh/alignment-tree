@@ -288,53 +288,60 @@ def markov_tables(tree):
 features = [
   # these three, being basic "dimensions" of a tree, are also allowed
   # to be left alone.
-  ('length', length, (lambda: 1,) ),
+  ('length', length, (lambda x: 1,), (lambda x: 1,)),
 
-  ('num_nodes', num_nodes, (lambda: 1, length)),
-  ('num_normal', op_counter(':N'), (num_nodes,)),
-  ('num_reverse', op_counter(':R'), (num_nodes,)),
+  ('num_nodes', num_nodes, (lambda x: 1, length), (lambda x: 1, t.compose(compress, length))),
+  ('num_normal', op_counter(':N'), (num_nodes,), (t.compose(compress, num_nodes),)),
+  ('num_reverse', op_counter(':R'), (num_nodes,), (t.compose(compress, num_nodes),)),
 
-  ('depth', depth, (lambda: 1, length)),
-  ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
+  ('depth', depth, (lambda x: 1, length), (lambda x: 1, t.compose(compress, length))),
+  ('reverse_max_depth', max_operation_depth(':R'), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
 
 
-  ('max_range_reverse', op_range(max, ':R'), (length,)),
-  ('min_range_reverse', op_range(min, ':R'), (length,)),
-  ('mean_range_reverse', op_range(mean, ':R'), (length,)),
-  ('stdev_range_reverse', op_range(stdev, ':R'), (length,)),
+  ('max_range_reverse', op_range(max, ':R'), (length,), (t.compose(compress, length),)),
+  ('min_range_reverse', op_range(min, ':R'), (length,), (t.compose(compress, length),)),
+  ('mean_range_reverse', op_range(mean, ':R'), (length,), (t.compose(compress, length),)),
+  ('stdev_range_reverse', op_range(stdev, ':R'), (length,), (t.compose(compress, length),)),
 
   # max leaf height is the same as depth of tree
-  ('mean_leaf_height', leaf_height(mean), (length, depth)),
-  ('stdev_leaf_height', leaf_height(stdev), (length, depth)),
-  ('min_leaf_height', leaf_height(min), (length, depth)),
+  ('mean_leaf_height', leaf_height(mean), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
+  ('stdev_leaf_height', leaf_height(stdev), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
+  ('min_leaf_height', leaf_height(min), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
 
 
-  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,)),
-  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,)),
+  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,), (t.compose(compress, num_nodes),)),
+  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,), (t.compose(compress, num_nodes),)),
 ]
 
 # add compressed versions of the features.
-features += [('compressed_' + x[0], t.compose(x[1], compress))
+features += [('compressed_' + x[0], t.compose(x[1], compress), x[3])
              for x in features]
 
 
 if __name__ == '__main__':
 
   markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
-  opts, args = getopt.getopt(sys.argv[1:], 'l:', ['--language'])
+  opts, args = getopt.getopt(sys.argv[1:], 'l:n', ['--language', '--normalize'])
   language = None
+  normalize = False
   for o,a in opts:
     if o == '-l' or o == '--language':
       language = a + ','
+    if o == '-n' or o == '--normalize':
+      print('going to normalize...')
+      normalize = True
 
+  # Generate header for feature values
   print(('language,' if language is not None else '') +
-         ','.join(x[0] for x in features) + ',' +
+          (','.join(','.join(x[0] + '_' + nf.__name__ for nf in x[2]) for x in features) if normalize 
+            else ','.join(x[0] for x in features)) + ',' +
           ','.join(markov_features) + ',' +
           ','.join([('compressed_' + f) for f in markov_features]))
 
+  # For each tree, compute its associated feature values
   for line in fileinput.input(args):
     tree = parse_sexp(line)[0]
-    print( (language or '') + ','.join([str(f[1](tree)) for f in features] +
+    print((language or '') + ','.join([str(','.join(str(float(f[1](tree)/float(nf(tree)))) for nf in f[2]) if normalize else f[1](tree)) for f in features] +
       list(t.get(markov_features, markov_tables(tree), str(0.0))) +
       list(t.get(markov_features, markov_tables(compress(tree)), str(0.0)))))
 
