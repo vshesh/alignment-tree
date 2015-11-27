@@ -297,7 +297,6 @@ features = [
   ('depth', depth, (lambda: 1, length)),
   ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
 
-
   ('max_range_reverse', op_range(max, ':R'), (length,)),
   ('min_range_reverse', op_range(min, ':R'), (length,)),
   ('mean_range_reverse', op_range(mean, ':R'), (length,)),
@@ -307,7 +306,6 @@ features = [
   ('mean_leaf_height', leaf_height(mean), (length, depth)),
   ('stdev_leaf_height', leaf_height(stdev), (length, depth)),
   ('min_leaf_height', leaf_height(min), (length, depth)),
-
 
   ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,)),
   ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,)),
