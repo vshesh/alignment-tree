@@ -328,7 +328,6 @@ if __name__ == '__main__':
     if o == '-l' or o == '--language':
       language = a + ','
     if o == '-n' or o == '--normalize':
-      print('going to normalize...')
       normalize = True
 
   # Generate header for feature values

@@ -9,6 +9,8 @@ import toolz as t
 import os
 
 
+
+
 def read_file_to_scipy_data(file_name, label):
 	f = open(file_name)
 	f.readline()
@@ -22,7 +24,6 @@ french = read_file_to_scipy_data('./features/fr.features', 'french')
 
 all_data =  np.row_stack((arabic[0], german[0], french[0]))
 all_labels = arabic[1], german[1] + french[1]
-norm_data = Normalizer().fit_transform(all_data, all_labels)
 
 arabic_clf = GMM(n_components=4, covariance_type='full')
 german_clf = GMM(n_components=4, covariance_type='full')
@@ -53,7 +54,7 @@ arabic_true_labels = [1 if x in arabic[0] else 0 for x in all_data]
 arabic_pred_labels = [1 if x >= 0 else 0 for x in arabic_predictions]
 
 
-print "German"
+print "german"
 print metrics.classification_report(german_pred_labels, german_true_labels)# map(lambda x:{'arabic':1,'german':0,'french':2,'spanish':3}[x], all_labels))
 
 print "french"
