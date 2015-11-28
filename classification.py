@@ -32,7 +32,7 @@ for i in xrange(len(gmms)):
   l = langs[i]
   print len(l)
   pred = [x > math.log(0.5) for x in g.score(all_data)]
-  expected = [~np.all(l-x) for x in all_data]
+  expected = [np.any(np.equal(l,x).all(1)) for x in all_data]
   print pred
   print expected
 
