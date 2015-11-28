@@ -328,12 +328,11 @@ if __name__ == '__main__':
     if o == '-l' or o == '--language':
       language = a + ','
     if o == '-n' or o == '--normalize':
-      print('going to normalize...')
       normalize = True
 
   # Generate header for feature values
   print(('language,' if language is not None else '') +
-          (','.join(','.join(x[0] + '_' + nf.__name__ for nf in x[2]) for x in features) if normalize 
+          (','.join(','.join(x[0] + '__' + nf.__name__ for nf in x[2]) for x in features) if normalize
             else ','.join(x[0] for x in features)) + ',' +
           ','.join(markov_features) + ',' +
           ','.join([('compressed_' + f) for f in markov_features]))
