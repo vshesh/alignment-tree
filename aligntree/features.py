@@ -332,7 +332,7 @@ if __name__ == '__main__':
 
   # Generate header for feature values
   print(('language,' if language is not None else '') +
-          (','.join(','.join(x[0] + '_' + nf.__name__ for nf in x[2]) for x in features) if normalize 
+          (','.join(','.join(x[0] + '__' + nf.__name__ for nf in x[2]) for x in features) if normalize
             else ','.join(x[0] for x in features)) + ',' +
           ','.join(markov_features) + ',' +
           ','.join([('compressed_' + f) for f in markov_features]))
