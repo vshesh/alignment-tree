@@ -288,33 +288,32 @@ def markov_tables(tree):
 features = [
   # these three, being basic "dimensions" of a tree, are also allowed
   # to be left alone.
-  ('length', length, (lambda x: 1,), (lambda x: 1,)),
+  ('length', length, (lambda x: 1,)),
+  ('depth', depth, (lambda x: 1, length)),
 
-  ('num_nodes', num_nodes, (lambda x: 1, length), (lambda x: 1, t.compose(compress, length))),
-  ('num_normal', op_counter(':N'), (num_nodes,), (t.compose(compress, num_nodes),)),
-  ('num_reverse', op_counter(':R'), (num_nodes,), (t.compose(compress, num_nodes),)),
+  ('num_nodes', num_nodes, (lambda x: 1, length)),
+  ('num_normal', op_counter(':N'), (num_nodes,)),
+  ('num_reverse', op_counter(':R'), (num_nodes,)),
 
-  ('depth', depth, (lambda x: 1, length), (lambda x: 1, t.compose(compress, length))),
-  ('reverse_max_depth', max_operation_depth(':R'), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
+  ('reverse_max_depth', max_operation_depth(':R'), (length, depth)),
 
-
-  ('max_range_reverse', op_range(max, ':R'), (length,), (t.compose(compress, length),)),
-  ('min_range_reverse', op_range(min, ':R'), (length,), (t.compose(compress, length),)),
-  ('mean_range_reverse', op_range(mean, ':R'), (length,), (t.compose(compress, length),)),
-  ('stdev_range_reverse', op_range(stdev, ':R'), (length,), (t.compose(compress, length),)),
+  ('max_range_reverse', op_range(max, ':R'), (length,)),
+  ('min_range_reverse', op_range(min, ':R'), (length,)),
+  ('mean_range_reverse', op_range(mean, ':R'), (length,)),
+  ('stdev_range_reverse', op_range(stdev, ':R'), (length,)),
 
   # max leaf height is the same as depth of tree
-  ('mean_leaf_height', leaf_height(mean), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
-  ('stdev_leaf_height', leaf_height(stdev), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
-  ('min_leaf_height', leaf_height(min), (length, depth), (t.compose(compress, length), t.compose(compress, depth))),
+  ('mean_leaf_height', leaf_height(mean), (length, depth)),
+  ('stdev_leaf_height', leaf_height(stdev), (length, depth)),
+  ('min_leaf_height', leaf_height(min), (length, depth)),
 
 
-  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,), (t.compose(compress, num_nodes),)),
-  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,), (t.compose(compress, num_nodes),)),
+  ('mean_inorder_pos_reverse', inorder_pos(':R', mean), (num_nodes,)),
+  ('stdev_inorder_pos_reverse', inorder_pos(':R', stdev), (num_nodes,))
 ]
 
 # add compressed versions of the features.
-features += [('compressed_' + x[0], t.compose(x[1], compress), x[3])
+features += [('compressed_' + x[0], t.compose(x[1], compress), [t.compose(f, compress) for f in x[2]])
              for x in features]
 
 
@@ -332,7 +331,8 @@ if __name__ == '__main__':
 
   # Generate header for feature values
   print(('language,' if language is not None else '') +
-          (','.join(','.join(x[0] + '__' + nf.__name__ for nf in x[2]) for x in features) if normalize
+          (','.join(','.join(x[0] + (lambda s: '' if s[0] == '<' else '__' + s)(nf.__name__)
+                             for nf in x[2]) for x in features) if normalize
             else ','.join(x[0] for x in features)) + ',' +
           ','.join(markov_features) + ',' +
           ','.join([('compressed_' + f) for f in markov_features]))
