@@ -36,8 +36,8 @@ indicators = mlb.fit_transform(labels)
 train, test, y_train, y_test = train_test_split(all_data, indicators)
 
 # clf = OneVsRestClassifier(GMM(n_components = 4, covariance_type='full'))
-clf = OneVsRestClassifier(svm.SVC())
-# clf = OneVsRestClassifier(SGDClassifier())
+# clf = OneVsRestClassifier(svm.SVC())
+clf = OneVsRestClassifier(SGDClassifier())
 clf.fit(train, y_train)
 
 train_pred =  clf.predict(train)
