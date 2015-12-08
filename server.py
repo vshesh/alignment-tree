@@ -22,6 +22,7 @@ app = Bottle()
 
 @app.route('/hello')
 def hello():
+    
     return "Hello World!\n"
 
 clf = cPickle.load(open('trained_classifier_swed,arab,fren,deut-all.pkl','r'))
@@ -31,7 +32,7 @@ lang_to_num = {'arabic': 0, 'german': 1, 'french': 2, 'swedish': 3}
 def executeClassification(language, query):
     features = np.fromstring(featurize(treegeneration(query)), sep=',')
     prediction = clf.predict([features])
-    return prediction[0][lang_to_num[language]]
+    return str(prediction[0][lang_to_num[language]])
 
 # @route('/forum')
 # def display_forum():
