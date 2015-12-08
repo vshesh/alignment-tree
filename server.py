@@ -29,7 +29,7 @@ lang_to_num = {'arabic': 0, 'german': 1, 'french': 2, 'swedish': 3}
 
 @app.route('/classifier/<language>/<query>') # classifier/arabic/0-1 0-1 3-4 3-5
 def executeClassification(language, query):
-    features = numpy.fromstring(featurize(treegeneration(query)), sep=',')
+    features = np.fromstring(featurize(treegeneration(query)), sep=',')
     prediction = clf.predict([features])
     return prediction[0][lang_to_num[language]]
 
