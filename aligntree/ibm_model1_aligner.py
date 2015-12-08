@@ -18,4 +18,4 @@ if __name__ == '__main__':
       alignment = " ".join([ i for i in a.alignment.__repr__()[11:-2].replace("),", "").replace(")", "").replace("(", "").replace(", ", "-").split() if "None" not in i])
       f1.write(" ||| ".join([" ".join(aligned.words), " ".join(aligned.mots), alignment]) + '\n')
   
-  print 'time: ', start - time.time()
+  print 'time: ', time.time() - start

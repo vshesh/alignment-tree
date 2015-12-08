@@ -273,6 +273,18 @@ def jsonTree(stack, linenum, alignment, source, translation):
         j ['parse_tree'] = [jsonPreorder(t) for t in stack]
     return json.dumps(j)
 
+
+def treegeneration(alignment):
+    order = sanitize(sanitize2(alignment.strip().split(' ')))
+    prevresult = []
+    result = binaryparse(order)
+
+    while len(result) > 1 and prevresult != result:
+        prevresult = result[:]
+        result = binaryparse(parseOrderK(parseOrderK(
+                             parseOrderK(result, 4),5),6))
+    return lisptree(result)
+
 if __name__ == '__main__':
 
     opts, args = getopt(sys.argv[1:], 'ajl', ['--align-only','--json', '--lisp'])

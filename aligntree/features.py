@@ -317,6 +317,13 @@ features += [('compressed_' + x[0], t.compose(x[1], compress), [t.compose(f, com
              for x in features]
 
 
+def featurize(tree, normalize=True):
+  markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
+  tree = parse_sexp(tree)[0]
+  return (','.join([str(','.join(str(float(f[1](tree)/float(nf(tree)))) for nf in f[2]) if normalize else f[1](tree)) for f in features] +
+      list(t.get(markov_features, markov_tables(tree), str(0.0))) +
+      list(t.get(markov_features, markov_tables(compress(tree)), str(0.0)))))
+
 if __name__ == '__main__':
 
   markov_features = ['markov_N', 'markov_R', 'markov_NR', 'markov_RN', 'markov_NN', 'markov_RR']
